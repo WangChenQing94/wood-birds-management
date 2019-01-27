@@ -1,36 +1,44 @@
 
 import Login from '../views/login/login'
 
-import Layout from '../views/layout/index'
-
 import Home from '../views/home/home';
 
-// const Login = () => import('../views/login/login');
+import UserManage from '../views/userManage';
+import CityManage from '../views/cityManage';
+import HouseManage from '../views/houseManage';
+import HomeManage from '../views/homeManage';
 
-// const Layout = () => import('../views/layout/index');
-
-// const Home = () => import('../views/home/home');
-
+// 登录路由
 export const login = {
   path: '/login',
   component: Login
 }
 
+// 所有路由
 export const routes = [
-  // {
-  //   path: '/login',
-  //   component: Login
-  // },
   {
-    path: '/',
-    component: Layout,
-    exact: true,
-    routes: [
-      {
-        path: '/home',
-        component: Home,
-        exact: true
-      }
-    ]
-  }
+    path: '/home',
+    component: Home,
+    exact: true
+  },
+  {
+    path: '/user-manage',
+    component: UserManage,
+    exact: true
+  },
+  {
+    path: '/city-manage',
+    component: CityManage,
+    exact: true
+  },
+  {
+    path: '/house-manage',
+    component: HouseManage,
+    exact: true
+  },
+  {
+    path: '/home-manage',
+    component: HomeManage,
+    exact: true
+  },
 ]

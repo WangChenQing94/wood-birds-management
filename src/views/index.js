@@ -1,6 +1,9 @@
+// 入口页面配置
 import React from 'react';
 import { HashRouter as Router, Route } from 'react-router-dom';
-import { routes, login } from '../router/index';
+import { login } from '../router/index';
+import Layout from './layout/index';
+import './index.less';
 
 class Index extends React.Component {
   render() {
@@ -8,13 +11,7 @@ class Index extends React.Component {
       <Router>
         <main>
           <Route exact path={login.path} component={login.component}></Route>
-          {
-            routes.map((route, i) => {
-              return (
-                <Route key={i} exact={route.exact} path={route.path} component={route.component}></Route>
-              )
-            })
-          }
+          <Route path="/" component={Layout}></Route>
         </main>
       </Router>
     )

@@ -8,13 +8,21 @@ import {
 import './login.less';
 
 class Login extends React.Component {
+  // 登录方法
+  login = () => {
+    console.log('登录');
+    this.props.history.push('/home');
+  }
+
   render() {
+    // 定义Form的检验函数
     const { getFieldDecorator } = this.props.form;
+    // 定义Form的组件
     const { Item } = Form;
     return (
       <div className="login">
-        登录
         <Form className="login-form">
+          <p className="title text-center font-24">木鸟短租后台管理系统</p>
           <Item>
             {
               getFieldDecorator('userName', {
@@ -34,7 +42,7 @@ class Login extends React.Component {
             }
           </Item>
           <div>
-            <Button type="primary">登录</Button>
+            <Button type="primary" onClick={this.login}>登录</Button>
           </div>
         </Form>
       </div>
@@ -42,4 +50,5 @@ class Login extends React.Component {
   }
 }
 
+// 使用Form时，需使用create方法创建表单组件，并传入你定义的组件
 export default Form.create()(Login);
