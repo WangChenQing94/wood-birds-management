@@ -49,6 +49,10 @@ class LayoutComponent extends React.Component {
     })
   }
 
+  // componentDidMount() {
+  //   const _this = this;
+  // }
+
   selectMenu = (item) => {
     console.log(item)
     console.log(item.title)
@@ -62,13 +66,14 @@ class LayoutComponent extends React.Component {
     const { SubMenu } = Menu;
     const { Header, Content, Sider } = Layout;
     const { menu } = this.state;
+    console.log(this.props);
 
     // 侧边栏渲染
     const MenuComponent = (
       <Menu
         mode="inline"
-        defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
+        defaultSelectedKeys={[this.props.location.pathname]}
+        defaultOpenKeys={['1']}
         style={{ height: '100%', borderRight: 0 }}>
         {
           menu.map((item, i) => {
@@ -76,15 +81,15 @@ class LayoutComponent extends React.Component {
               return (
                 <SubMenu key={i} title={<span>{item.title}</span>} >
                   {
-                    item.children.map((cell, j) => (
-                      <Menu.Item key={`${i}-${j}`} onClick={this.selectMenu.bind(this, cell)}>{cell.title}</Menu.Item>
+                    item.children.map((cell) => (
+                      <Menu.Item key={cell.url} onClick={this.selectMenu.bind(this, cell)}>{cell.title}</Menu.Item>
                     ))
                   }
                 </SubMenu>
               )
             } else {
               return (
-                <Menu.Item key={i} onClick={this.selectMenu.bind(this, item)}>{item.title}</Menu.Item>
+                <Menu.Item key={item.url} onClick={this.selectMenu.bind(this, item)}>{item.title}</Menu.Item>
               )
             }
           })

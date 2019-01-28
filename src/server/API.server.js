@@ -7,8 +7,19 @@ import API from './API.config';
 // 定义接口Http类
 class Http {
   constructor() {
+    this.home = {
+      getCityList: this.get.bind(this, API.home.getCityList),
+      addCity: this.post.bind(this, API.home.addCity)
+    }
+
     this.account = {
       getUserList: this.get.bind(this, API.account.getUserList)
+    }
+
+    this.resource = {
+      getHouseList: this.post.bind(this, API.resource.getHouseList),
+      addHouse: this.post.bind(this, API.resource.addHouse),
+      upload: API.resource.upload
     }
   }
 

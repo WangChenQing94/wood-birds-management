@@ -5,13 +5,24 @@ const ACCOUNT = `${API}/account`;
 const RESOURCE = `${API}/resource`;
 const DISCOVER = `${API}/discover`;
 
-const home = {};
+const home = {
+  getCityList: `${API}/getCityList`,
+  addCity: `${API}/addCity`
+};
 
 const account = {
-  getUserList: `${ACCOUNT}/getUserList`
+  getUserList: `${ACCOUNT}/getUserList`,
+}
+
+const resource = {
+  getHouseList: `${RESOURCE}/list`,
+  addHouse: `${RESOURCE}/addHouse`,
+  upload: `${RESOURCE}/upload`
 }
 
 export default {
   API,
+  home,
   account,
+  resource
 }
