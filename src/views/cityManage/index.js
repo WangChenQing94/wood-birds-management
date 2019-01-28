@@ -97,7 +97,20 @@ class CityManage extends React.Component {
     };
     const newCityForm = (
       <Form>
-        <Item label="城市编码" {...formItemLayout}>
+        <Item label="名称" {...formItemLayout}>
+          {
+            getFieldDecorator('name', {
+              rules: [
+                {
+                  required: true
+                }
+              ]
+            })(
+              <Input placeholder="请输入名称"></Input>
+            )
+          }
+        </Item>
+        <Item label="编码" {...formItemLayout}>
           {
             getFieldDecorator('code', {
               rules: [
@@ -106,11 +119,11 @@ class CityManage extends React.Component {
                 }
               ]
             })(
-              <Input placeholder="请输入城市编码"></Input>
+              <Input placeholder="请输入编码"></Input>
             )
           }
         </Item>
-        <Item label="父级城市编码" {...formItemLayout}>
+        <Item label="父级编码" {...formItemLayout}>
           {
             getFieldDecorator('parentCode', {
               rules: [
@@ -119,7 +132,7 @@ class CityManage extends React.Component {
                 }
               ]
             })(
-              <Input placeholder="请输入父级城市编码"></Input>
+              <Input placeholder="请输入父级编码"></Input>
             )
           }
         </Item>
