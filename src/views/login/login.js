@@ -5,12 +5,27 @@ import {
   Button,
   Icon
 } from 'antd';
+import Crypto from 'crypto-js';
+import Http from '../../server/API.server';
 import './login.less';
 
 class Login extends React.Component {
   // 登录方法
   login = () => {
     console.log('登录');
+    const _this = this;
+    _this.props.form.validateFields((err, { phone, password }) => {
+      console.log(err)
+      if (!err) {
+        Http.account.login({
+          phone,
+          password: Crypto.MD5(`${phone}${Crypto.MD5(password)}`)
+        }).then(res => {
+          console.log('登录结果 ---------- ')
+          console.log(res);
+        })
+      }
+    })
     this.props.history.push('/home');
   }
 
@@ -26,7 +41,7 @@ class Login extends React.Component {
           <Item>
             {
               getFieldDecorator('userName', {
-                
+
               })(
                 <Input prefix={<Icon type="user" />} placeholder="用户名"></Input>
               )
@@ -35,9 +50,9 @@ class Login extends React.Component {
           <Item>
             {
               getFieldDecorator('password', {
-                
+
               })(
-                <Input prefix={<Icon type="lock" />} placeholder="密码"></Input>
+                <Input type="password" prefix={<Icon type="lock" />} placeholder="密码"></Input>
               )
             }
           </Item>

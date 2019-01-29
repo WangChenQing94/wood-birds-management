@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 // 路由配置
 import { routes } from '../../router/index';
 import {
-  Layout, Menu, Breadcrumb, Icon
+  Layout, Menu
 } from 'antd';
 // mobx数据管理插件
 import { observable } from 'mobx';
@@ -49,10 +49,6 @@ class LayoutComponent extends React.Component {
     })
   }
 
-  // componentDidMount() {
-  //   const _this = this;
-  // }
-
   selectMenu = (item) => {
     console.log(item)
     console.log(item.title)
@@ -67,6 +63,13 @@ class LayoutComponent extends React.Component {
     const { Header, Content, Sider } = Layout;
     const { menu } = this.state;
     console.log(this.props);
+
+    // const userId = sessionStorage.getItem('userInfo');
+    // if (!userId) {
+    //   return (
+    //     <Redirect to="/login" exact></Redirect>
+    //   )
+    // }
 
     // 侧边栏渲染
     const MenuComponent = (

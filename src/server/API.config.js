@@ -7,17 +7,20 @@ const DISCOVER = `${API}/discover`;
 
 const home = {
   getCityList: `${API}/getCityList`,
-  addCity: `${API}/addCity`
+  addCity: `${API}/addCity`,
+  deleteCity: `${API}/deleteCity`
 };
 
 const account = {
+  login: `${ACCOUNT}/login`,
   getUserList: `${ACCOUNT}/getUserList`,
 }
 
 const resource = {
   getHouseList: `${RESOURCE}/list`,
   addHouse: `${RESOURCE}/addHouse`,
-  upload: `${RESOURCE}/upload`
+  upload: `${RESOURCE}/upload`,
+  deleteHouse: `${RESOURCE}/deleteHouse`
 }
 
 export default {

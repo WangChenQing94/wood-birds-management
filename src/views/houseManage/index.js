@@ -7,14 +7,15 @@ import {
   Select,
   Upload,
   Icon,
-  Modal,
   Button,
   Switch,
+  Modal,
   Checkbox,
   DatePicker,
   TimePicker,
   Cascader,
-  Input
+  Input,
+  message
 } from 'antd'
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
@@ -27,7 +28,10 @@ class HouseManage extends React.Component {
   constructor(props) {
     super(props);
     this.state = observable({
-      isNew: true,
+      isNew: false,
+      visible: false,
+      modalTitle: '',
+      currentHouse: {},
       previewList: [],
       fileList: [],
       columns: [
@@ -50,6 +54,12 @@ class HouseManage extends React.Component {
         {
           title: '房屋类型',
           dataIndex: 'houseType'
+        },
+        {
+          title: '操作',
+          render: (text, recored, index) => (
+            <span className="co-primary pointer" onClick={this.showModal.bind(this, recored)}>删除</span>
+          )
         }
       ],
       tableData: [],
@@ -139,10 +149,26 @@ class HouseManage extends React.Component {
     })
   }
 
+  // 显示弹窗
+  @action
+  showModal = (info) => {
+    const _this = this;
+    console.log(info);
+    _this.state.visible = true;
+    _this.state.currentHouse = info;
+    _this.state.modalTitle = (
+      <div className="page-title">
+        <i></i>
+        删除房源
+      </div>
+    )
+  }
+
   // 显示或隐藏添加房源的界面
   @action
   addHouseVisible = () => {
     const _this = this;
+    _this.state.modalTitle = '删除房源';
     _this.state.isNew = !_this.state.isNew;
   }
 
@@ -209,9 +235,36 @@ class HouseManage extends React.Component {
     })
   }
 
+  @action
+  // 确认删除房源
+  handleModalOk = () => {
+    const _this = this;
+    console.log(_this.state.currentHouse);
+    const { houseId } = _this.state.currentHouse;
+    Http.resource.deleteHouse({
+      houseId
+    }).then(res => {
+      console.log('删除房源的结果-------------');
+      console.log(res);
+      if (res.code === 0) {
+        _this.state.visible = false;
+        _this.getHouseList();
+      } else {
+        _this.state.visible = false;
+        message.error('该房源删除失败');
+      }
+    })
+  }
+
+  @action
+  handleModalCancel = () => {
+    const _this = this;
+    _this.state.visible = false;
+  }
+
   render() {
     const _this = this;
-    const { previewList } = _this.state;
+    const { previewList, visible, modalTitle, currentHouse } = _this.state;
     const { getFieldDecorator } = _this.props.form;
     const { Item } = Form;
     const { TextArea } = Input;
@@ -238,7 +291,7 @@ class HouseManage extends React.Component {
 
     const uploadPreview = (
       previewList.map((item, i) => (
-        <img className="fl preview-img" src={item} alt="图片" key={i}/>
+        <img className="fl preview-img" src={item} alt="图片" key={i} />
       ))
     )
 
@@ -251,6 +304,7 @@ class HouseManage extends React.Component {
       onChange: _this.handleUploadChange
     }
 
+    // 添加房源
     const addHouseComponent = (
       <Form>
         <Item {...formItemLayout} label="房屋名称">
@@ -513,6 +567,8 @@ class HouseManage extends React.Component {
         </Row>
       </Form>
     )
+
+    // 房源列表
     const houseListComponent = (
       <div>
         <div className="search-box">
@@ -532,6 +588,18 @@ class HouseManage extends React.Component {
       </div>
     )
 
+    const modalOption = {
+      visible,
+      title: modalTitle,
+      onOk: _this.handleModalOk,
+      onCancel: _this.handleModalCancel
+    }
+    const dialog = (
+      <Modal {...modalOption}>
+        <p>是否删除该房源</p>
+      </Modal>
+    )
+
     return (
       <div className="house-manage">
         <p className="page-title">
@@ -541,6 +609,7 @@ class HouseManage extends React.Component {
         {
           _this.state.isNew ? addHouseComponent : houseListComponent
         }
+        {dialog}
       </div>
     )
   }

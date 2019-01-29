@@ -9,17 +9,20 @@ class Http {
   constructor() {
     this.home = {
       getCityList: this.get.bind(this, API.home.getCityList),
-      addCity: this.post.bind(this, API.home.addCity)
+      addCity: this.post.bind(this, API.home.addCity),
+      deleteCity: this.post.bind(this, API.home.deleteCity)
     }
 
     this.account = {
+      login: this.post.bind(this, API.account.login),
       getUserList: this.get.bind(this, API.account.getUserList)
     }
 
     this.resource = {
       getHouseList: this.post.bind(this, API.resource.getHouseList),
       addHouse: this.post.bind(this, API.resource.addHouse),
-      upload: API.resource.upload
+      upload: API.resource.upload,
+      deleteHouse: this.post.bind(this, API.resource.deleteHouse)
     }
   }
 

@@ -27,6 +27,9 @@ ul {
 .text-center {
   text-align: center;
 }
+.pointer {
+  cursor: pointer;
+}
 
 
 
@@ -69,6 +72,10 @@ ul {
 .co-fff {
   color: #fff;
 }
+.co-primary {
+  color: #1890ff;
+}
+
 
 /* 字体大小 */
 .font-14 {

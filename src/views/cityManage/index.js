@@ -5,7 +5,9 @@ import {
   Button,
   Form,
   Input,
-  Table
+  Table,
+  Modal,
+  message
 } from 'antd';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
@@ -17,23 +19,32 @@ class CityManage extends React.Component {
     super(props);
     this.state = observable({
       isNew: false,
+      currentCity: {},
+      modalTitle: '',
+      visible: false,
       columns: [
         {
-          title: '城市',
+          title: '城市名称',
           dataIndex: 'name'
         },
         {
-          title: '编码',
+          title: '城市编码',
           dataIndex: 'code'
+        },
+        {
+          title: '操作',
+          render: (text, record, index) => (
+            <span className="pointer co-primary" onClick={this.visibleModal.bind(this, record)}>删除</span>
+          )
         }
       ],
       tableData: []
     })
   }
 
-  
+
   componentDidMount() {
-    this.getCityList();  
+    this.getCityList();
   }
 
   @action
@@ -73,15 +84,55 @@ class CityManage extends React.Component {
           if (res.code === 0) {
             _this.state.isNew = !_this.state.isNew;
             _this.getCityList();
+          } else {
+            message.error(res.msg);
           }
         })
       }
     })
   }
 
+  @action
+  visibleModal = (info) => {
+    const _this = this;
+    _this.state.visible = true;
+    _this.state.modalTitle = (
+      <div className="page-title">
+        <i></i>
+        删除城市
+      </div>
+    )
+    _this.state.currentCity = info;
+  }
+
+  @action
+  handleModalOk = () => {
+    const _this = this;
+    const { code } = _this.state.currentCity;
+    Http.home.deleteCity({
+      code
+    }).then(res => {
+      console.log('删除城市结果 ------------ ')
+      console.log(res)
+      if (res.code === 0) {
+        _this.state.visible = false;
+        _this.getCityList();
+      } else {
+        _this.state.visible = false;
+        message.error('城市删除失败');
+      }
+    })
+  }
+
+  @action
+  handleModalCancel = () => {
+    const _this = this;
+    _this.state.visible = false;
+  }
+
   render() {
     const _this = this;
-    const { isNew, columns, tableData } = _this.state;
+    const { isNew, columns, tableData, visible, modalTitle } = _this.state;
     const { Item } = Form;
     const { getFieldDecorator } = _this.props.form;
 
@@ -97,7 +148,7 @@ class CityManage extends React.Component {
     };
     const newCityForm = (
       <Form>
-        <Item label="名称" {...formItemLayout}>
+        <Item label="城市名称" {...formItemLayout}>
           {
             getFieldDecorator('name', {
               rules: [
@@ -106,11 +157,11 @@ class CityManage extends React.Component {
                 }
               ]
             })(
-              <Input placeholder="请输入名称"></Input>
+              <Input placeholder="请输入城市名称"></Input>
             )
           }
         </Item>
-        <Item label="编码" {...formItemLayout}>
+        <Item label="城市编码" {...formItemLayout}>
           {
             getFieldDecorator('code', {
               rules: [
@@ -119,11 +170,11 @@ class CityManage extends React.Component {
                 }
               ]
             })(
-              <Input placeholder="请输入编码"></Input>
+              <Input placeholder="请输入城市编码"></Input>
             )
           }
         </Item>
-        <Item label="父级编码" {...formItemLayout}>
+        <Item label="父级城市编码" {...formItemLayout}>
           {
             getFieldDecorator('parentCode', {
               rules: [
@@ -132,7 +183,7 @@ class CityManage extends React.Component {
                 }
               ]
             })(
-              <Input placeholder="请输入父级编码"></Input>
+              <Input placeholder="请输入父级城市编码"></Input>
             )
           }
         </Item>
@@ -156,6 +207,18 @@ class CityManage extends React.Component {
       </div>
     )
 
+    const modalOption = {
+      visible,
+      title: modalTitle,
+      onOk: _this.handleModalOk,
+      onCancel: _this.handleModalCancel
+    }
+    const deleteModal = (
+      <Modal {...modalOption}>
+        <p>是否删除该城市?</p>
+      </Modal>
+    )
+
     return (
       <div className="city-manage">
         <p className="page-title">
@@ -165,6 +228,7 @@ class CityManage extends React.Component {
         {
           isNew ? newCityForm : cityList
         }
+        {deleteModal}
       </div>
     )
   }
