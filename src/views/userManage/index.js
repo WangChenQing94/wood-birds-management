@@ -1,4 +1,5 @@
 import React from 'react';
+import API from '../../server/API.config';
 import Http from '../../server/API.server';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
@@ -26,7 +27,12 @@ class UserManage extends React.Component {
       console.log('获取用户列表返回值----------------');
       console.log(res);
       if (res.code === 0) {
-        _this.state.userList = res.data;
+        _this.state.userList = res.data.map(item => {
+          if (item.phone === 'admin') {
+            item.avatarUrl = `${API.API}/${item.avatarUrl}`;
+          }
+          return item;
+        });
         _this.state.total = res.total;
       }
     })
@@ -39,7 +45,7 @@ class UserManage extends React.Component {
     console.log(userList)
     const users = (
       userList.map((user, i) => (
-        <li key={i}>
+        <li key={i} className="fl">
           <div>
             <img src={user.avatarUrl} alt="头像" />
             <p className="text-center">{user.name}</p>
@@ -54,7 +60,7 @@ class UserManage extends React.Component {
           <i></i>
           用户管理
         </p>
-        <ul className="user-list">{users}</ul>
+        <ul className="user-list clear">{users}</ul>
       </div>
     )
   }

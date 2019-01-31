@@ -1,12 +1,12 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 // 路由配置
 import { routes } from '../../router/index';
 import {
   Layout, Menu
 } from 'antd';
 // mobx数据管理插件
-import { observable } from 'mobx';
+import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import './index.less';
 
@@ -17,23 +17,24 @@ class LayoutComponent extends React.Component {
     super(props);
     // 页面数据集合
     this.state = observable({
+      currentUrl: '/home-manage',
       menu: [
-        {
-          title: '首页',
-          icon: '',
-          url: '/home'
-        },
+        // {
+        //   title: '首页',
+        //   icon: '',
+        //   url: '/home'
+        // },
         {
           title: '资源管理',
           icon: '',
           children: [
             {
               title: '首页管理',
-              url: '/home-manage'
+              url: '/home-manage',
             },
             {
               title: '房源管理',
-              url: '/house-manage'
+              url: '/house-manage',
             },
             {
               title: '城市管理',
@@ -49,6 +50,28 @@ class LayoutComponent extends React.Component {
     })
   }
 
+  // @action
+  // componentDidMount() {
+  //   const _this = this;
+  //   console.log('---------------------')
+  //   const userInfo = sessionStorage.getItem('userInfo') && JSON.parse(sessionStorage.getItem('userInfo'));
+  //   if (userInfo && !userInfo.isAdmin) {
+  //     _this.state.menu = [{
+  //       title: '资源管理',
+  //       icon: '',
+  //       children: [
+  //         {
+  //           title: '房源管理',
+  //           url: '/house-manage',
+  //         }
+  //       ]
+  //     }]
+  //     _this.state.currentUrl = '/house-manage';
+  //     _this.props.history.push('/house-manage');
+  //   }
+  // }
+
+  // 跳转页面
   selectMenu = (item) => {
     console.log(item)
     console.log(item.title)
@@ -57,26 +80,49 @@ class LayoutComponent extends React.Component {
     _this.props.history.push(item.url);
   }
 
+  // 退出登录
+  handleLogout = () => {
+    const _this = this;
+    sessionStorage.removeItem('userInfo');
+    _this.props.history.push('/login');
+  }
+
   // 渲染html的函数
   render() {
+    const _this = this;
     const { SubMenu } = Menu;
     const { Header, Content, Sider } = Layout;
-    const { menu } = this.state;
-    console.log(this.props);
+    const { menu, currentUrl } = this.state;
 
-    // const userId = sessionStorage.getItem('userInfo');
-    // if (!userId) {
-    //   return (
-    //     <Redirect to="/login" exact></Redirect>
-    //   )
+    // 判断是否登录
+    const userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || {};
+    if (!Object.keys(userInfo).length) {
+      return (
+        <Redirect to="/login" exact></Redirect>
+      )
+    }
+
+    // if (userInfo && !userInfo.isAdmin) {
+    //   _this.menu = [{
+    //     title: '资源管理',
+    //     icon: '',
+    //     children: [
+    //       {
+    //         title: '房源管理',
+    //         url: '/house-manage',
+    //       }
+    //     ]
+    //   }]
+    //   _this.currentUrl = '/house-manage';
+    //   _this.props.history.push('/house-manage');
     // }
 
     // 侧边栏渲染
     const MenuComponent = (
       <Menu
         mode="inline"
-        defaultSelectedKeys={[this.props.location.pathname]}
-        defaultOpenKeys={['1']}
+        defaultSelectedKeys={[currentUrl]}
+        defaultOpenKeys={['0']}
         style={{ height: '100%', borderRight: 0 }}>
         {
           menu.map((item, i) => {
@@ -102,8 +148,16 @@ class LayoutComponent extends React.Component {
 
     return (
       <Layout className="layout-container">
-        <Header className="header co-fff">
+        <Header className="header co-fff clear">
           <span className="font-18">木鸟短租后台管理系统</span>
+
+          <div className="user-info fr pos-re">
+            <img src={userInfo.avatarUrl} alt="头像" />
+            <span>{userInfo.name}</span>
+            <ul className="user-operation-list pos-ab text-center pointer">
+              <li onClick={this.handleLogout}>退出登录</li>
+            </ul>
+          </div>
         </Header>
         <Layout>
           <Sider>

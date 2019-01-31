@@ -11,22 +11,24 @@ import './login.less';
 
 class Login extends React.Component {
   // 登录方法
-  login = () => {
-    console.log('登录');
+  login = e => {
+    e.preventDefault();
     const _this = this;
     _this.props.form.validateFields((err, { phone, password }) => {
-      console.log(err)
       if (!err) {
         Http.account.login({
           phone,
-          password: Crypto.MD5(`${phone}${Crypto.MD5(password)}`)
+          password: Crypto.MD5(`${phone}${Crypto.MD5(password).toString()}`).toString()
         }).then(res => {
           console.log('登录结果 ---------- ')
           console.log(res);
+          if (res.code === 0) {
+            sessionStorage.setItem('userInfo', JSON.stringify(res.data));
+            _this.props.history.push('/home-manage');
+          }
         })
       }
     })
-    this.props.history.push('/home');
   }
 
   render() {
@@ -36,14 +38,14 @@ class Login extends React.Component {
     const { Item } = Form;
     return (
       <div className="login">
-        <Form className="login-form">
+        <Form className="login-form" onSubmit={this.login}>
           <p className="title text-center font-24">木鸟短租后台管理系统</p>
           <Item>
             {
-              getFieldDecorator('userName', {
+              getFieldDecorator('phone', {
 
               })(
-                <Input prefix={<Icon type="user" />} placeholder="用户名"></Input>
+                <Input prefix={<Icon type="user" />} placeholder="手机号"></Input>
               )
             }
           </Item>
@@ -57,7 +59,7 @@ class Login extends React.Component {
             }
           </Item>
           <div>
-            <Button type="primary" onClick={this.login}>登录</Button>
+            <Button type="primary" htmlType="submit">登录</Button>
           </div>
         </Form>
       </div>

@@ -34,6 +34,9 @@ class HouseManage extends React.Component {
       currentHouse: {},
       previewList: [],
       fileList: [],
+      pageSize: 10,
+      pageNo: 1,
+      total: 0,
       columns: [
         {
           title: '房屋名称',
@@ -63,12 +66,7 @@ class HouseManage extends React.Component {
         }
       ],
       tableData: [],
-      // formData: [
-      //   {label: '房屋名称', field: 'name', type: 'input', text: '请输入房源名称'},
-      //   {label: '房屋价格', field: 'price', type: 'number', text: '请输入房源价格'},
-      //   {label: '房屋面积', field: 'area', type: 'number', text: '请输入房源面积'}
-      // ],
-      options: [],
+      cityList: [],
       configure: [
         { label: '无线WIFI', value: 'net' },
         { label: '电视', value: 'tv' },
@@ -95,9 +93,31 @@ class HouseManage extends React.Component {
   @action
   componentDidMount() {
     const _this = this;
-    Http.resource.getHouseList({
-      pageSize: 10,
+    _this.getCityList();
+    _this.getHouseList();
+  }
+
+  // 获取城市列表
+  @action
+  getCityList = () => {
+    const _this = this;
+    Http.home.getCityList({
+      pageSize: 9999,
       pageNo: 1
+    }).then(res => {
+      console.log('获取城市列表结果 ------------- ')
+      console.log(res);
+    })
+  }
+
+  // 获取房源列表
+  @action
+  getHouseList = () => {
+    const _this = this;
+    const { pageSize, pageNo } = _this.state;
+    Http.resource.getHouseList({
+      pageSize,
+      pageNo
     }).then(res => {
       console.log(res);
       if (res.code === 0) {
@@ -145,6 +165,7 @@ class HouseManage extends React.Component {
           return item;
         });
         _this.state.total = res.total;
+        _this.state.pageNo = res.pageNo;
       }
     })
   }
@@ -177,10 +198,15 @@ class HouseManage extends React.Component {
   handleAddHouse = (e) => {
     e.preventDefault();
     const _this = this;
+    const { previewList } = _this.state;
     _this.props.form.validateFieldsAndScroll((err, data) => {
       console.log(err)
       console.log(data)
       if (!err) {
+        if (!previewList.length) {
+          message.error('请上传房源图片');
+          return
+        }
         const postData = JSON.parse(JSON.stringify(data));
         postData.beginTime = new Date(postData.beginAndEndTime[0]).getTime();
         postData.endTime = new Date(postData.beginAndEndTime[1]).getTime();
@@ -262,15 +288,24 @@ class HouseManage extends React.Component {
     _this.state.visible = false;
   }
 
+  // 修改页码
+  @action
+  changePageNo = (val) => {
+    const _this = this;
+    _this.state.pageNo = val;
+  }
+
   render() {
     const _this = this;
-    const { previewList, visible, modalTitle, currentHouse } = _this.state;
+    const { previewList, visible, modalTitle, total, pageNo, pageSize } = _this.state;
     const { getFieldDecorator } = _this.props.form;
     const { Item } = Form;
     const { TextArea } = Input;
     const { Option } = Select;
     const { RangePicker } = DatePicker;
     const CheckboxGroup = Checkbox.Group;
+
+    const isAdmin = JSON.parse(sessionStorage.getItem('userInfo')).isAdmin;
 
     const formItemLayout = {
       labelCol: {
@@ -443,7 +478,7 @@ class HouseManage extends React.Component {
                 required: true
               }]
             })(
-              <Cascader options={this.state.options} placeholder="请选择省市区"></Cascader>
+              <Cascader options={this.state.cityList} placeholder="请选择省市区"></Cascader>
             )
           }
         </Item>
@@ -573,17 +608,26 @@ class HouseManage extends React.Component {
       <div>
         <div className="search-box">
           <Row gutter={16}>
-            <Col span={8} offset={4}>
-              <Input placeholder="请输入房屋名称"></Input>
-            </Col>
-            <Col span={6} offset={4}>
-              <Button type="primary">搜索</Button>
-              <Button type="primary" className="btn-primary-transparent" onClick={_this.addHouseVisible}>新增</Button>
-            </Col>
+            {
+              !isAdmin ?
+                (
+                  <Col span={8}>
+                    <Button type="primary" onClick={_this.addHouseVisible}>新增</Button>
+                  </Col>
+                ) : null
+            }
           </Row>
         </div>
         <div className="table">
-          <Table columns={_this.state.columns} dataSource={_this.state.tableData}></Table>
+          <Table
+            columns={_this.state.columns}
+            dataSource={_this.state.tableData}
+            pagination={{
+              total: total,
+              pageSize: pageSize,
+              current: pageNo,
+              onChange: _this.changePageNo
+            }}></Table>
         </div>
       </div>
     )

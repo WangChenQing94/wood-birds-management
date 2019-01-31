@@ -1,8 +1,14 @@
 // 接口服务的类函数
 
 // 引入axios  类似ajax,原理使用的是Promise
+import {
+  message
+} from 'antd';
 import axios from 'axios';
 import API from './API.config';
+
+// 允许请求时携带跨域凭证
+axios.defaults.withCredentials = true;
 
 // 定义接口Http类
 class Http {
@@ -10,7 +16,12 @@ class Http {
     this.home = {
       getCityList: this.get.bind(this, API.home.getCityList),
       addCity: this.post.bind(this, API.home.addCity),
-      deleteCity: this.post.bind(this, API.home.deleteCity)
+      deleteCity: this.post.bind(this, API.home.deleteCity),
+      uploadCityPicture: API.home.uploadCityPicture,
+      delCityPicture: this.post.bind(this, API.home.delCityPicture),
+      getBanner: this.get.bind(this, API.home.getBanner),
+      uploadBanner: API.home.uploadBanner,
+      delBanner: this.post.bind(this, API.home.delBanner)
     }
 
     this.account = {
@@ -24,6 +35,8 @@ class Http {
       upload: API.resource.upload,
       deleteHouse: this.post.bind(this, API.resource.deleteHouse)
     }
+
+    this.resInterceptors();
   }
 
   formatParam(params) {
@@ -47,6 +60,21 @@ class Http {
   post(url, data) {
     data = data || {};
     return axios.post(url, data).then(res => res.data);
+  }
+
+  resInterceptors() {
+    return axios.interceptors.response.use(res => {
+      if (res.data.code === 4) {
+        message.warn('您的账户已经登录超时，请重新登录');
+        setTimeout(() => {
+          sessionStorage.removeItem('userInfo');
+          window.history.go('/login');
+        }, 1000);
+      }
+      return res;
+    }, err => {
+      return Promise.reject(err)
+    })
   }
 }
 

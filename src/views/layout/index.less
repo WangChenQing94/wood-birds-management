@@ -1,6 +1,39 @@
 .layout-container {
   // height: 100%;
   min-height: 100%;
+
+  .user-info {
+    img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 20px;
+    }
+    &:hover {
+      .user-operation-list {
+        display: block;
+      }
+    }
+    .user-operation-list {
+      display: none;
+      top: 100%;
+      width: 100%;
+      // margin-top: 1px;
+      border-top: 1px solid #f0f0f0;
+      background-color: #001529;
+      border-radius: 4px;
+      li {
+        height: 36px;
+        line-height: 36px;
+        color: #fff;
+        &:hover {
+          opacity: .8;
+        }
+      }
+    }
+  }
+
   .container {
     margin: 30px 0 0 0;
     background: #fff;

@@ -8,7 +8,12 @@ const DISCOVER = `${API}/discover`;
 const home = {
   getCityList: `${API}/getCityList`,
   addCity: `${API}/addCity`,
-  deleteCity: `${API}/deleteCity`
+  deleteCity: `${API}/deleteCity`,
+  uploadCityPicture: `${API}/uploadCityPicture`,
+  delCityPicture: `${API}/delCityPicture`,
+  getBanner: `${API}/home`,
+  uploadBanner: `${API}/uploadBanner`,
+  delBanner: `${API}/delBanner`
 };
 
 const account = {
