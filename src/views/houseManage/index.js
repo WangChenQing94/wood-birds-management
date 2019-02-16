@@ -66,7 +66,28 @@ class HouseManage extends React.Component {
         }
       ],
       tableData: [],
-      cityList: [],
+      cityList: [
+        {
+          value: '00001',
+          label: '上海',
+          children: [
+            {
+              value: '00002',
+              label: '浦东新区'
+            }
+          ]
+        },
+        {
+          value: '00003',
+          label: '北京',
+          children: [
+            {
+              value: '00004',
+              label: '朝阳区'
+            }
+          ]
+        }
+      ],
       configure: [
         { label: '无线WIFI', value: 'net' },
         { label: '电视', value: 'tv' },

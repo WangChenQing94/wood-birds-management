@@ -16,6 +16,7 @@ class Login extends React.Component {
     const _this = this;
     _this.props.form.validateFields((err, { phone, password }) => {
       if (!err) {
+        console.log(Crypto.MD5(`${phone}${Crypto.MD5(password).toString()}`).toString());
         Http.account.login({
           phone,
           password: Crypto.MD5(`${phone}${Crypto.MD5(password).toString()}`).toString()
