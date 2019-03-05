@@ -1,4 +1,5 @@
 // 接口的配置文件;
+// const API = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://localhost:3000';
 const API = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://aileer.net';
 
 const ACCOUNT = `${API}/account`;
@@ -28,9 +29,17 @@ const resource = {
   deleteHouse: `${RESOURCE}/deleteHouse`
 }
 
+const discover = {
+  getWonderfulList: `${DISCOVER}/wonderful`,
+  getArticleDetail: `${DISCOVER}/articleDetail`,
+  addWonderful: `${DISCOVER}/addWonderful`,
+  uploadBanner: `${DISCOVER}/uploadBanner`
+}
+
 export default {
   API,
   home,
   account,
-  resource
+  resource,
+  discover
 }

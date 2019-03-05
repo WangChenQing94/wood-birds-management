@@ -100,7 +100,7 @@ class HouseManage extends React.Component {
   // 获取城市列表
   @action
   getCityList = () => {
-    const _this = this;
+    // const _this = this;
     Http.home.getCityList({
       pageSize: 9999,
       pageNo: 1

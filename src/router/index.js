@@ -7,6 +7,7 @@ import UserManage from '../views/userManage';
 import CityManage from '../views/cityManage';
 import HouseManage from '../views/houseManage';
 import HomeManage from '../views/homeManage';
+import ArticleManage from '../views/articleManage';
 
 // 登录路由
 export const login = {
@@ -41,4 +42,9 @@ export const routes = [
     component: HomeManage,
     exact: true
   },
+  {
+    path: '/article-manage',
+    component: ArticleManage,
+    exact: true
+  }
 ]

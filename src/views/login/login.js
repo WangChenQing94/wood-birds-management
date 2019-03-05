@@ -3,7 +3,8 @@ import {
   Form,
   Input,
   Button,
-  Icon
+  Icon,
+  message
 } from 'antd';
 import Crypto from 'crypto-js';
 import Http from '../../server/API.server';
@@ -20,11 +21,13 @@ class Login extends React.Component {
           phone,
           password: Crypto.MD5(`${phone}${Crypto.MD5(password).toString()}`).toString()
         }).then(res => {
-          console.log('登录结果 ---------- ')
+          console.log('登录结果 ---------- ');
           console.log(res);
           if (res.code === 0) {
             sessionStorage.setItem('userInfo', JSON.stringify(res.data));
             _this.props.history.push('/home-manage');
+          } else {
+            message.error('用户名密码错误');
           }
         })
       }
@@ -45,7 +48,7 @@ class Login extends React.Component {
               getFieldDecorator('phone', {
 
               })(
-                <Input prefix={<Icon type="user" />} placeholder="手机号"></Input>
+                <Input prefix={<Icon type="user" />} placeholder="手机号" autoComplete="off"></Input>
               )
             }
           </Item>
@@ -54,7 +57,7 @@ class Login extends React.Component {
               getFieldDecorator('password', {
 
               })(
-                <Input type="password" prefix={<Icon type="lock" />} placeholder="密码"></Input>
+                <Input type="password" prefix={<Icon type="lock" />} placeholder="密码" autoComplete="off"></Input>
               )
             }
           </Item>

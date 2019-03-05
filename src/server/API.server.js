@@ -36,6 +36,13 @@ class Http {
       deleteHouse: this.post.bind(this, API.resource.deleteHouse)
     }
 
+    this.discover = {
+      getWonderfulList: this.get.bind(this, API.discover.getWonderfulList),
+      getArticleDetail: this.get.bind(this, API.discover.getArticleDetail),
+      addWonderful: this.post.bind(this, API.discover.addWonderful),
+      uploadBanner: API.discover.uploadBanner
+    }
+
     this.resInterceptors();
   }
 
@@ -68,6 +75,7 @@ class Http {
         message.warn('您的账户已经登录超时，请重新登录');
         setTimeout(() => {
           sessionStorage.removeItem('userInfo');
+          sessionStorage.removeItem('curPath');
           window.history.go('/login');
         }, 1000);
       }

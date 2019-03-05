@@ -1,0 +1,18 @@
+.article-form .article-title {
+  margin-bottom: 20px;
+}
+.article-form .ant-upload.ant-upload-select-picture-card {
+  margin-top: 30px;
+}
+.article-form footer {
+  margin-top: 30px;
+}
+#ueditor {
+  width: 100%;
+}
+#ueditor .edui-editor {
+  width: 100% !important;
+}
+#ueditor .edui-editor #edui1_iframeholder {
+  width: 100% !important;
+}

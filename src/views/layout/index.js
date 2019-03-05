@@ -17,13 +17,8 @@ class LayoutComponent extends React.Component {
     super(props);
     // 页面数据集合
     this.state = observable({
-      currentUrl: '/home-manage',
+      currentUrl: '',
       menu: [
-        // {
-        //   title: '首页',
-        //   icon: '',
-        //   url: '/home'
-        // },
         {
           title: '资源管理',
           icon: '',
@@ -35,6 +30,10 @@ class LayoutComponent extends React.Component {
             {
               title: '房源管理',
               url: '/house-manage',
+            },
+            {
+              title: '文章管理',
+              url: '/article-manage'
             },
             {
               title: '城市管理',
@@ -50,26 +49,16 @@ class LayoutComponent extends React.Component {
     })
   }
 
-  // @action
-  // componentDidMount() {
-  //   const _this = this;
-  //   console.log('---------------------')
-  //   const userInfo = sessionStorage.getItem('userInfo') && JSON.parse(sessionStorage.getItem('userInfo'));
-  //   if (userInfo && !userInfo.isAdmin) {
-  //     _this.state.menu = [{
-  //       title: '资源管理',
-  //       icon: '',
-  //       children: [
-  //         {
-  //           title: '房源管理',
-  //           url: '/house-manage',
-  //         }
-  //       ]
-  //     }]
-  //     _this.state.currentUrl = '/house-manage';
-  //     _this.props.history.push('/house-manage');
-  //   }
-  // }
+  @action
+  componentWillMount() {
+    const _this = this;
+    const curPath = sessionStorage.getItem('curPath');
+    if (curPath) {
+      _this.state.currentUrl = curPath;
+    } else {
+      _this.state.currentUrl = '/home-manage';
+    }
+  }
 
   // 跳转页面
   selectMenu = (item) => {
@@ -77,6 +66,7 @@ class LayoutComponent extends React.Component {
     console.log(item.title)
     console.log(item.url)
     const _this = this;
+    sessionStorage.setItem('curPath', item.url);
     _this.props.history.push(item.url);
   }
 
@@ -84,12 +74,13 @@ class LayoutComponent extends React.Component {
   handleLogout = () => {
     const _this = this;
     sessionStorage.removeItem('userInfo');
+    sessionStorage.removeItem('curPath');
     _this.props.history.push('/login');
   }
 
   // 渲染html的函数
+  @action
   render() {
-    const _this = this;
     const { SubMenu } = Menu;
     const { Header, Content, Sider } = Layout;
     const { menu, currentUrl } = this.state;
