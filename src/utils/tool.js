@@ -1,23 +1,51 @@
 // 一维数组处理为JSON格式
-export function arrayToJson(treeArr, idName, parentName) {
+export function arrayToJson(arr) {
+  let treeArr = [].concat(arr)
   let r = []
   let tmpMap = {}
-  treeArr.forEach((item, index) => {
+
+  treeArr.forEach((item) => {
     tmpMap[item.code] = item
   })
-  treeArr.forEach((item, index) => {
-    let key = tmpMap[item.parentCode]
-    if (key) {
-      if (!key['children']) {
-        key['children'] = []
-        key['children'].push(item)
-      } else {
-        key['children'].push(item)
-      }
+  // console.log(tmpMap);
+  treeArr.forEach(item => {
+    if (item.code === item.parentCode) {
+      let parent = tmpMap[item.parentCode];
+      r.push(parent);
     } else {
-      r.push(item)
+      let parent = tmpMap[item.parentCode];
+  
+      // console.log('----------------')
+      // console.log(parent)
+      if (parent) {
+        if (!parent['children']) {
+          parent['children'] = []
+        }
+        parent.children.push(item)
+      }
     }
+    // if (parent.code !== parent.parentCode) {
+    //   if (!parent['children']) {
+    //     parent['children'] = [];
+    //   }
+    //   parent['children'].push(item);
+    // } else {
+    //   r.push(parent);
+    // }
+    // const obj = Object.assign({}, item);
+    // let key = Object.assign({}, tmpMap[obj.parentCode]);
+    // if (key) {
+    //   if (!key['children']) {
+    //     key['children'] = []
+    //     key['children'].push(obj)
+    //   } else {
+    //     key['children'].push(obj)
+    //   }
+    // } else {
+    //   r.push(obj)
+    // }
   })
+  console.log(r)
   return r
 }
 

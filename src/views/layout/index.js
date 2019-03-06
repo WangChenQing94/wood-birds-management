@@ -18,6 +18,7 @@ class LayoutComponent extends React.Component {
     // 页面数据集合
     this.state = observable({
       currentUrl: '',
+      auth: '',
       menu: [
         {
           title: '资源管理',
@@ -26,22 +27,32 @@ class LayoutComponent extends React.Component {
             {
               title: '首页管理',
               url: '/home-manage',
+              auth: '0'
             },
             {
               title: '房源管理',
               url: '/house-manage',
+              auth: '01'
+            },
+            {
+              title: '订单管理',
+              url: '/order-manage',
+              auth: '1'
             },
             {
               title: '文章管理',
-              url: '/article-manage'
+              url: '/article-manage',
+              auth: '0'
             },
             {
               title: '城市管理',
-              url: '/city-manage'
+              url: '/city-manage',
+              auth: '0'
             },
             {
               title: '用户管理',
-              url: '/user-manage'
+              url: '/user-manage',
+              auth: '0'
             }
           ]
         }
@@ -49,16 +60,19 @@ class LayoutComponent extends React.Component {
     })
   }
 
-  @action
-  componentWillMount() {
-    const _this = this;
-    const curPath = sessionStorage.getItem('curPath');
-    if (curPath) {
-      _this.state.currentUrl = curPath;
-    } else {
-      _this.state.currentUrl = '/home-manage';
-    }
-  }
+  // @action
+  // componentWillMount() {
+  //   const _this = this;
+  //   const curPath = sessionStorage.getItem('curPath');
+  //   const isAdmin = JSON.parse(sessionStorage.getItem('userInfo')) && JSON.parse(sessionStorage.getItem('userInfo')).isAdmin;
+  //   console.log(isAdmin);
+  //   _this.state.auth = isAdmin ? '0' : '1';
+  //   if (curPath) {
+  //     _this.state.currentUrl = curPath;
+  //   } else {
+  //     _this.state.currentUrl = '/home-manage';
+  //   }
+  // }
 
   // 跳转页面
   selectMenu = (item) => {
@@ -81,10 +95,7 @@ class LayoutComponent extends React.Component {
   // 渲染html的函数
   @action
   render() {
-    const { SubMenu } = Menu;
-    const { Header, Content, Sider } = Layout;
-    const { menu, currentUrl } = this.state;
-
+    const _this = this;
     // 判断是否登录
     const userInfo = JSON.parse(sessionStorage.getItem('userInfo')) || {};
     if (!Object.keys(userInfo).length) {
@@ -92,6 +103,21 @@ class LayoutComponent extends React.Component {
         <Redirect to="/login" exact></Redirect>
       )
     }
+
+    
+    const curPath = sessionStorage.getItem('curPath');
+    const isAdmin = JSON.parse(sessionStorage.getItem('userInfo')) && JSON.parse(sessionStorage.getItem('userInfo')).isAdmin;
+    console.log(isAdmin);
+    _this.state.auth = isAdmin ? '0' : '1';
+    if (curPath) {
+      _this.state.currentUrl = curPath;
+    } else {
+      _this.state.currentUrl = isAdmin ? '/home-manage' : '/house-manage';
+    }
+
+    const { SubMenu } = Menu;
+    const { Header, Content, Sider } = Layout;
+    const { menu, currentUrl } = this.state;
 
     // if (userInfo && !userInfo.isAdmin) {
     //   _this.menu = [{
@@ -121,9 +147,15 @@ class LayoutComponent extends React.Component {
               return (
                 <SubMenu key={i} title={<span>{item.title}</span>} >
                   {
-                    item.children.map((cell) => (
-                      <Menu.Item key={cell.url} onClick={this.selectMenu.bind(this, cell)}>{cell.title}</Menu.Item>
-                    ))
+                    item.children.map((cell) => {
+                      if (cell.auth.indexOf(this.state.auth) > -1) {
+                        return (
+                          <Menu.Item key={cell.url} onClick={this.selectMenu.bind(this, cell)}>{cell.title}</Menu.Item>
+                        )
+                      } else {
+                        return null
+                      }
+                    })
                   }
                 </SubMenu>
               )

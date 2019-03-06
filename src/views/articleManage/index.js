@@ -11,7 +11,7 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import Http from '../../server/API.server';
 import axios from 'axios';
-import './index.less'
+import './index.less';
 
 @observer
 class ArticleManage extends React.Component {
@@ -23,22 +23,19 @@ class ArticleManage extends React.Component {
 				{
 					title: '文章标题',
 					dataIndex: 'title',
-					width: 200
 				},
 				{
 					title: '创建时间',
 					dataIndex: 'createTime',
-					width: 200
 				},
 				{
 					title: '内容',
 					render: (text, record, index) => (
-						<div className="ellipsis" dangerouslySetInnerHTML={{__html: record.content || ''}}></div>
+						<div class="ellipsis" style={{'width': '300px'}} dangerouslySetInnerHTML={{__html: record.content || ''}}></div>
 					)
 				},
 				{
 					title: '操作',
-					width: 200,
 					render: (text, record, index) => (
 						<span className="pointer co-primary">删除</span>
 					)

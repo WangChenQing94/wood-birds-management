@@ -21,6 +21,7 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import Http from '../../server/API.server';
 import axios from 'axios';
+import { arrayToJson } from '../../utils/tool';
 import './index.less'
 
 @observer
@@ -66,6 +67,10 @@ class HouseManage extends React.Component {
         }
       ],
       tableData: [],
+      fieldNames: {
+        label: 'name',
+        value: 'code'
+      },
       cityList: [
         {
           value: '00001',
@@ -121,13 +126,17 @@ class HouseManage extends React.Component {
   // 获取城市列表
   @action
   getCityList = () => {
-    // const _this = this;
+    const _this = this;
     Http.home.getCityList({
       pageSize: 9999,
       pageNo: 1
     }).then(res => {
       console.log('获取城市列表结果 ------------- ')
       console.log(res);
+      if (res.code === 0) {
+        _this.state.cityList = [].concat(arrayToJson(res.data));
+        console.log(_this.state.cityList);
+      }
     })
   }
 
@@ -211,6 +220,9 @@ class HouseManage extends React.Component {
   addHouseVisible = () => {
     const _this = this;
     _this.state.modalTitle = '删除房源';
+    if (!_this.state.isNew) {
+      _this.getCityList();
+    }
     _this.state.isNew = !_this.state.isNew;
   }
 
@@ -252,16 +264,28 @@ class HouseManage extends React.Component {
         }
         for (let key in notes) {
           delete postData[key];
-        }
-        delete postData.beginAndEndTime;
-        delete postData.configure;
-        postData.images = _this.previewList;
+        }        
+        postData.images = previewList;
         postData.notes = notes;
         postData.details = details;
         postData.configure = configure;
+        postData.province = postData.address[0] || '';
+        postData.city = postData.address[1] || '';
+        postData.region = postData.address[2] || '';
+        delete postData.beginAndEndTime;
+        delete postData.configure;
+        delete postData.address;
+
         Http.resource.addHouse(postData).then(res => {
-          console.log('添加房源信息 结果----------------')
+          console.log('添加房源信息 结果----------------');
           console.log(res);
+          if (res.code === 0) {
+            message.success('添加房源成功');
+            _this.state.isNew = false;
+            _this.getHouseList();
+          } else {
+            message.error('添加房源失败');
+          }
         })
       }
     })
@@ -499,7 +523,7 @@ class HouseManage extends React.Component {
                 required: true
               }]
             })(
-              <Cascader options={this.state.cityList} placeholder="请选择省市区"></Cascader>
+              <Cascader options={this.state.cityList} fieldNames={this.state.fieldNames} placeholder="请选择省市区"></Cascader>
             )
           }
         </Item>
@@ -567,44 +591,28 @@ class HouseManage extends React.Component {
         </Item>
         <Item {...formItemLayout} label="身份证">
           {
-            getFieldDecorator('idCard', {
-              rules: [{
-                required: true
-              }]
-            })(
+            getFieldDecorator('idCard', {})(
               <Switch checkedChildren="需要" unCheckedChildren="不需要"></Switch>
             )
           }
         </Item>
         <Item {...formItemLayout} label="线下押金">
           {
-            getFieldDecorator('deposit', {
-              rules: [{
-                required: true
-              }]
-            })(
+            getFieldDecorator('deposit', {})(
               <Switch checkedChildren="需要" unCheckedChildren="不需要"></Switch>
             )
           }
         </Item>
         <Item {...formItemLayout} label="房屋要求">
           {
-            getFieldDecorator('landlordReq', {
-              rules: [{
-                required: true
-              }]
-            })(
+            getFieldDecorator('landlordReq', {})(
               <TextArea rows={4} placeholder="请输入房屋要求"></TextArea>
             )
           }
         </Item>
         <Item {...formItemLayout} label="入住须知">
           {
-            getFieldDecorator('notice', {
-              rules: [{
-                required: true
-              }]
-            })(
+            getFieldDecorator('notice', {})(
               <TextArea rows={4} placeholder="请输入入住须知"></TextArea>
             )
           }
