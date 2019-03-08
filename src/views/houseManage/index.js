@@ -147,7 +147,8 @@ class HouseManage extends React.Component {
     const { pageSize, pageNo } = _this.state;
     Http.resource.getHouseList({
       pageSize,
-      pageNo
+      pageNo,
+      sort: 0
     }).then(res => {
       console.log(res);
       if (res.code === 0) {
@@ -232,6 +233,9 @@ class HouseManage extends React.Component {
     e.preventDefault();
     const _this = this;
     const { previewList } = _this.state;
+    /**
+     * 表单验证，必填字段
+     */
     _this.props.form.validateFieldsAndScroll((err, data) => {
       console.log(err)
       console.log(data)
@@ -256,7 +260,7 @@ class HouseManage extends React.Component {
           notice: postData.notice
         };
         const configure = {};
-        for (let key in postData.configure) {
+        for (let key of postData.configure) {
           configure[key] = true;
         }
         for (let key in details) {
@@ -264,7 +268,7 @@ class HouseManage extends React.Component {
         }
         for (let key in notes) {
           delete postData[key];
-        }        
+        }
         postData.images = previewList;
         postData.notes = notes;
         postData.details = details;
@@ -273,7 +277,7 @@ class HouseManage extends React.Component {
         postData.city = postData.address[1] || '';
         postData.region = postData.address[2] || '';
         delete postData.beginAndEndTime;
-        delete postData.configure;
+        // delete postData.configure;
         delete postData.address;
 
         Http.resource.addHouse(postData).then(res => {
@@ -516,14 +520,14 @@ class HouseManage extends React.Component {
             )
           }
         </Item>
-        <Item {...formItemLayout} label="省市区">
+        <Item {...formItemLayout} label="市区">
           {
             getFieldDecorator('address', {
               rules: [{
                 required: true
               }]
             })(
-              <Cascader options={this.state.cityList} fieldNames={this.state.fieldNames} placeholder="请选择省市区"></Cascader>
+              <Cascader options={this.state.cityList} fieldNames={this.state.fieldNames} placeholder="请选择城市和地区"></Cascader>
             )
           }
         </Item>

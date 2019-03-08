@@ -7,9 +7,8 @@ export function arrayToJson(arr) {
   treeArr.forEach((item) => {
     tmpMap[item.code] = item
   })
-  // console.log(tmpMap);
   treeArr.forEach(item => {
-    if (item.code === item.parentCode) {
+    if (item.parentCode === item.code) {
       let parent = tmpMap[item.parentCode];
       r.push(parent);
     } else {

@@ -43,6 +43,10 @@ class Http {
       uploadBanner: API.discover.uploadBanner
     }
 
+    this.order = {
+      getOrderList: this.post.bind(this, API.order.getOrderList)
+    }
+
     this.resInterceptors();
   }
 

@@ -26,7 +26,11 @@ class Login extends React.Component {
           console.log(res);
           if (res.code === 0) {
             sessionStorage.setItem('userInfo', JSON.stringify(res.data));
-            _this.props.history.push('/home-manage');
+            if (res.data.isAdmin) {
+              _this.props.history.push('/home-manage');
+            } else {
+              _this.props.history.push('/house-manage');
+            }
           } else {
             message.error('用户名密码错误');
           }

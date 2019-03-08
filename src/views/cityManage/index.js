@@ -16,6 +16,7 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import Http from '../../server/API.server';
 import axios from 'axios';
+import {arrayToJson} from '../../utils/tool';
 import './index.less';
 
 @observer
@@ -26,20 +27,28 @@ class CityManage extends React.Component {
       isNew: false,
       isHot: false,
       pageNo: 1,
-      pageSize: 10,
+      pageSize: 999,
       total: 0,
       currentCity: {},
       previewList: '',
       modalTitle: '',
       visible: false,
+      allTableData: [],
+      tableDataType: 2,
       columns: [
         {
           title: '城市名称',
-          dataIndex: 'name'
+          render: (text, record) => (
+            <span>{record.name}</span>
+          )
         },
         {
           title: '城市编码',
           dataIndex: 'code'
+        },
+        {
+          title: '父级编码',
+          dataIndex: 'parentCode'
         },
         {
           title: '热门城市',
@@ -73,11 +82,15 @@ class CityManage extends React.Component {
       console.log('获取城市列表 结果---------------')
       console.log(res)
       if (res.code === 0) {
-        _this.state.tableData = res.data.map(item => {
-          item.key = item.code;
+        _this.state.tableData = res.data.map((item, index) => {
+          item.key = index;
           item.isHot = item.isHot ? '是' : '否';
           return item;
         })
+        _this.state.allTableData = JSON.parse(JSON.stringify(_this.state.tableData));
+        if (_this.state.tableDataType !== 1) {
+          _this.state.tableData = arrayToJson(_this.state.tableData);
+        }
         _this.state.total = res.total;
         _this.state.pageNo = res.pageNo;
       }
@@ -88,6 +101,8 @@ class CityManage extends React.Component {
   @action
   addCityShowOrHide = () => {
     const _this = this;
+    _this.state.isHot = false;
+    _this.state.previewList = '';
     _this.state.isNew = !_this.state.isNew;
   }
 
@@ -108,7 +123,7 @@ class CityManage extends React.Component {
         const postData = Object.assign({}, data)
         postData.isHot = isHot;
         postData.url = previewList;
-        Http.home.addCity(data).then(res => {
+        Http.home.addCity(postData).then(res => {
           console.log('添加城市编码 结果 -----------')
           console.log(res)
           if (res.code === 0) {
@@ -207,9 +222,25 @@ class CityManage extends React.Component {
     _this.state.pageNo = val;
   }
 
+  /**
+   * 表格显示树形结构 或者 全部
+   */
+  @action
+  handleShowTableList = (type) => {
+    console.log(type)
+    const _this = this;
+    const arr = JSON.parse(JSON.stringify(_this.state.allTableData));
+    _this.state.tableDataType = type;
+    if (type === 1) {
+      _this.state.tableData = [].concat(arr);
+    } else {
+      _this.state.tableData = [].concat(arrayToJson(arr));
+    }
+  }
+
   render() {
     const _this = this;
-    const { isNew, columns, tableData, visible, modalTitle, previewList, isHot, total, pageSize, pageNo } = _this.state;
+    const { isNew, columns, tableData, visible, modalTitle, previewList, isHot } = _this.state;
     const { Item } = Form;
     const { getFieldDecorator } = _this.props.form;
 
@@ -290,7 +321,7 @@ class CityManage extends React.Component {
                 }
               ]
             })(
-              <Input placeholder="请输入父级城市编码"></Input>
+              <Input placeholder="请输入父级城市编码, 城市输入城市编码"></Input>
             )
           }
         </Item>
@@ -318,17 +349,15 @@ class CityManage extends React.Component {
       <div className="city-list">
         <div>
           <Button type="primary" onClick={_this.addCityShowOrHide}>新增</Button>
+          <Button type="primary" onClick={_this.handleShowTableList.bind(this, 1)}>全部</Button>
+          <Button type="primary" onClick={_this.handleShowTableList.bind(this, 2)}>树形数据</Button>
         </div>
         <div className="table">
           <Table
             columns={columns}
             dataSource={tableData}
-            pagination={{
-              total,
-              pageSize,
-              current: pageNo,
-              onChange: _this.changePageNo
-            }}></Table>
+            defaultExpandAllRows={true}
+            pagination={false}></Table>
         </div>
       </div>
     )
