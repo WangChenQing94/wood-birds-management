@@ -6,16 +6,18 @@ import {
 import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import Http from '../../server/API.server';
-import { spawn } from 'child_process';
+import { formatDate } from '../../utils/tool';
 
 @observer
 class OrderManage extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = observable({
+			userId: JSON.parse(sessionStorage.getItem('userInfo')).userId,
 			columns: [
 				{
 					title: '房源名称',
+					key: 'name',
 					render: (text, record) => {
 						return (
 							<span>{record.houses && record.houses.name}</span>
@@ -24,6 +26,7 @@ class OrderManage extends React.Component {
 				},
 				{
 					title: '位置',
+					key: 'address',
 					render: (text, record) => {
 						const house = record.houses || {}
 						const address = `${house.province} ${house.city} ${house.region} ${house.addrDetail}`
@@ -64,12 +67,17 @@ class OrderManage extends React.Component {
 		const _this = this;
 		Http.order.getOrderList({
 			status: 2,
-			userId: '123',
+			userId: _this.state.userId,
 			pageSize: 10,
 			pageNo: 1
 		}).then(res => {
 			console.log(res)
 			if (res.code === 0) {
+				res.data.forEach((item, i) => {
+					item.key = i;
+					item.beginTime = formatDate(item.beginTime);
+					item.endTime = formatDate(item.endTime);
+				})
 				_this.state.tableData = [].concat(res.data);
 			}
 		})

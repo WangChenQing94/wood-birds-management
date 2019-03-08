@@ -11,6 +11,7 @@ import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import Http from '../../server/API.server';
 import axios from 'axios';
+import { formatDate } from '../../utils/tool';
 import './index.less';
 
 @observer
@@ -31,7 +32,7 @@ class ArticleManage extends React.Component {
 				{
 					title: '内容',
 					render: (text, record, index) => (
-						<div class="ellipsis" style={{'width': '300px'}} dangerouslySetInnerHTML={{__html: record.content || ''}}></div>
+						<div class="ellipsis" style={{ 'width': '300px' }} dangerouslySetInnerHTML={{ __html: record.content || '' }}></div>
 					)
 				},
 				{
@@ -92,6 +93,7 @@ class ArticleManage extends React.Component {
 			if (res.code === 0) {
 				_this.state.tableData = res.data.map((item, i) => {
 					item.key = i;
+					item.createTime = formatDate(item.createTime);
 					return item;
 				});
 			}
@@ -152,31 +154,31 @@ class ArticleManage extends React.Component {
 	}
 
 	// 上传banner图片
-  @action
-  uploadImage = ({ action, file }) => {
-    const _this = this;
-    const formData = new FormData();
-    formData.append('file', file);
-    axios.post(action, formData).then(res => {
-      console.log('上传文件的结果 ---------- ')
-      console.log(res);
-      if (res.data.code === 0) {
-        _this.state.previewList.push(res.data.data);
-      }
-    })
-  }
+	@action
+	uploadImage = ({ action, file }) => {
+		const _this = this;
+		const formData = new FormData();
+		formData.append('file', file);
+		axios.post(action, formData).then(res => {
+			console.log('上传文件的结果 ---------- ')
+			console.log(res);
+			if (res.data.code === 0) {
+				_this.state.previewList.push(res.data.data);
+			}
+		})
+	}
 
 	render() {
 		const _this = this;
 		const { isNew, columns, tableData, total, pageNo, pageSize, previewList } = _this.state;
 
 		const uploadOption = {
-      action: Http.discover.uploadBanner,
-      listType: 'picture-card',
-      multiple: false,
-      showUploadList: false,
-      customRequest: _this.uploadImage
-    }
+			action: Http.discover.uploadBanner,
+			listType: 'picture-card',
+			multiple: false,
+			showUploadList: false,
+			customRequest: _this.uploadImage
+		}
 
 		const ArticleList = (
 			<div className="article-list">
@@ -195,11 +197,11 @@ class ArticleManage extends React.Component {
 		)
 
 		const uploadButton = (
-      <div className="upload">
-        <Icon type="plus" />
-        <div className="ant-upload-text">上传封面图片</div>
-      </div>
-    )
+			<div className="upload">
+				<Icon type="plus" />
+				<div className="ant-upload-text">上传封面图片</div>
+			</div>
+		)
 
 		const newArticleForm = (
 			<div className="article-form">

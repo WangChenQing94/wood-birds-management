@@ -38,6 +38,7 @@ class CityManage extends React.Component {
       columns: [
         {
           title: '城市名称',
+          key: '1',
           render: (text, record) => (
             <span>{record.name}</span>
           )
@@ -56,6 +57,7 @@ class CityManage extends React.Component {
         },
         {
           title: '操作',
+          key: '4',
           render: (text, record, index) => (
             <span className="pointer co-primary" onClick={this.visibleModal.bind(this, record)}>删除</span>
           )
@@ -83,9 +85,10 @@ class CityManage extends React.Component {
       console.log(res)
       if (res.code === 0) {
         _this.state.tableData = res.data.map((item, index) => {
-          item.key = index;
-          item.isHot = item.isHot ? '是' : '否';
-          return item;
+          const cell = JSON.parse(JSON.stringify(item));
+          cell.key = index;
+          cell.isHot = cell.isHot ? '是' : '否';
+          return cell;
         })
         _this.state.allTableData = JSON.parse(JSON.stringify(_this.state.tableData));
         if (_this.state.tableDataType !== 1) {

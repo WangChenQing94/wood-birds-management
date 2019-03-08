@@ -23,43 +23,22 @@ export function arrayToJson(arr) {
         parent.children.push(item)
       }
     }
-    // if (parent.code !== parent.parentCode) {
-    //   if (!parent['children']) {
-    //     parent['children'] = [];
-    //   }
-    //   parent['children'].push(item);
-    // } else {
-    //   r.push(parent);
-    // }
-    // const obj = Object.assign({}, item);
-    // let key = Object.assign({}, tmpMap[obj.parentCode]);
-    // if (key) {
-    //   if (!key['children']) {
-    //     key['children'] = []
-    //     key['children'].push(obj)
-    //   } else {
-    //     key['children'].push(obj)
-    //   }
-    // } else {
-    //   r.push(obj)
-    // }
   })
   console.log(r)
   return r
 }
 
-export function filterArray(data, parentCode) {
-  var tree = [];
-  var temp;
-  for (var i = 0; i < data.length; i++) {
-    if (data[i].parentCode === parentCode) {
-      var obj = data[i];
-      temp = filterArray(data, data[i].code);
-      if (temp.length > 0) {
-        obj.children = temp;
-      }
-      tree.push(obj);
-    }
-  }
-  return tree;
+/**
+ * 格式化时间 格式(YYYY-MM-DD hh:mm:ss)
+ */
+export function formatDate(val) {
+  const time = new Date(val);
+  const YYYY = time.getFullYear();
+  const MM = time.getMonth() > 9 ? time.getMonth() + 1 : `0${time.getMonth() + 1}`;
+  const DD = time.getDate() > 10 ? time.getDate() : `0${time.getDate()}`;
+
+  const hh = time.getHours() > 10 ? time.getHours() : `0${time.getHours()}`;
+  const mm = time.getMinutes() > 10 ? time.getMinutes() : `0${time.getMinutes()}`;
+  const ss = time.getSeconds() > 10 ? time.getSeconds() : `0${time.getSeconds()}`;
+  return `${YYYY}-${MM}-${DD} ${hh}:${mm}:${ss}`;
 }

@@ -273,9 +273,9 @@ class HouseManage extends React.Component {
         postData.notes = notes;
         postData.details = details;
         postData.configure = configure;
-        postData.province = postData.address[0] || '';
-        postData.city = postData.address[1] || '';
-        postData.region = postData.address[2] || '';
+        postData.province = '';
+        postData.city = postData.address[0] || '';
+        postData.region = postData.address[1] || '';
         delete postData.beginAndEndTime;
         // delete postData.configure;
         delete postData.address;
