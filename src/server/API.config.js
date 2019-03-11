@@ -27,7 +27,8 @@ const resource = {
   getHouseList: `${RESOURCE}/list`, // 获取房源列表
   addHouse: `${RESOURCE}/addHouse`, // 添加房源
   upload: `${RESOURCE}/upload`, // 上传房源图片
-  deleteHouse: `${RESOURCE}/deleteHouse` // 删除房源
+  deleteHouse: `${RESOURCE}/deleteHouse`, // 删除房源
+  deleteHousePicture: `${RESOURCE}/deleteHousePicture` // 删除房源图片
 }
 
 const discover = {

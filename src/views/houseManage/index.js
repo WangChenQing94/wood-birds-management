@@ -224,6 +224,7 @@ class HouseManage extends React.Component {
     if (!_this.state.isNew) {
       _this.getCityList();
     }
+    _this.state.previewList = [];
     _this.state.isNew = !_this.state.isNew;
   }
 
@@ -344,6 +345,21 @@ class HouseManage extends React.Component {
     _this.state.pageNo = val;
   }
 
+  // 删除房源图片
+  @action
+  handleDeletePicture = (url, index) => {
+    const _this = this;
+    console.log(url);
+    Http.resource.deleteHousePicture({
+      url
+    }).then(res => {
+      console.log(res)
+      if (res.code === 0) {
+        _this.state.previewList.splice(index, 1);
+      }
+    })
+  }
+
   render() {
     const _this = this;
     const { previewList, visible, modalTitle, total, pageNo, pageSize } = _this.state;
@@ -368,14 +384,17 @@ class HouseManage extends React.Component {
     };
     const uploadButton = (
       <div>
-        <Icon type="plus" />
+        <Icon type="plus"/>
         <div className="ant-upload-text">上传图片</div>
       </div>
     )
 
     const uploadPreview = (
       previewList.map((item, i) => (
-        <img className="fl preview-img" src={item} alt="图片" key={i} />
+        <div className="pos-re fl preview" key={i}>
+          <Icon type="delete" className="pos-ab pointer" onClick={_this.handleDeletePicture.bind(this, item, i)}/>
+          <img className="preview-img" src={item} alt="图片"/>
+        </div>
       ))
     )
 

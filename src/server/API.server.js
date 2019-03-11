@@ -33,7 +33,8 @@ class Http {
       getHouseList: this.post.bind(this, API.resource.getHouseList),
       addHouse: this.post.bind(this, API.resource.addHouse),
       upload: API.resource.upload,
-      deleteHouse: this.post.bind(this, API.resource.deleteHouse)
+      deleteHouse: this.post.bind(this, API.resource.deleteHouse),
+      deleteHousePicture: this.post.bind(this, API.resource.deleteHousePicture)
     }
 
     this.discover = {

@@ -6,7 +6,13 @@
   margin-right: 20px;
   margin-bottom: 20px;
 }
-.house-manage .preview-img {
+.house-manage .preview .pos-ab {
+  right: 12px;
+  top: -8px;
+  z-index: 1;
+  font-size: 20px;
+}
+.house-manage .preview .preview-img {
   width: 104px;
   height: 104px;
   border: 1px solid #e5e5e5;
