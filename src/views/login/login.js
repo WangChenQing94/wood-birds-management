@@ -47,7 +47,7 @@ class Login extends React.Component {
     return (
       <div className="login">
         <Form className="login-form" onSubmit={this.login}>
-          <p className="title text-center font-24">木鸟短租后台管理系统</p>
+          <p className="title text-center font-24">邻舍民宿管理系统</p>
           <Item>
             {
               getFieldDecorator('phone', {

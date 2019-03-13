@@ -60,20 +60,6 @@ class LayoutComponent extends React.Component {
     })
   }
 
-  // @action
-  // componentWillMount() {
-  //   const _this = this;
-  //   const curPath = sessionStorage.getItem('curPath');
-  //   const isAdmin = JSON.parse(sessionStorage.getItem('userInfo')) && JSON.parse(sessionStorage.getItem('userInfo')).isAdmin;
-  //   console.log(isAdmin);
-  //   _this.state.auth = isAdmin ? '0' : '1';
-  //   if (curPath) {
-  //     _this.state.currentUrl = curPath;
-  //   } else {
-  //     _this.state.currentUrl = '/home-manage';
-  //   }
-  // }
-
   // 跳转页面
   selectMenu = (item) => {
     console.log(item)
@@ -119,21 +105,6 @@ class LayoutComponent extends React.Component {
     const { Header, Content, Sider } = Layout;
     const { menu, currentUrl } = this.state;
 
-    // if (userInfo && !userInfo.isAdmin) {
-    //   _this.menu = [{
-    //     title: '资源管理',
-    //     icon: '',
-    //     children: [
-    //       {
-    //         title: '房源管理',
-    //         url: '/house-manage',
-    //       }
-    //     ]
-    //   }]
-    //   _this.currentUrl = '/house-manage';
-    //   _this.props.history.push('/house-manage');
-    // }
-
     // 侧边栏渲染
     const MenuComponent = (
       <Menu
@@ -172,7 +143,7 @@ class LayoutComponent extends React.Component {
     return (
       <Layout className="layout-container">
         <Header className="header co-fff clear">
-          <span className="font-18">木鸟短租后台管理系统</span>
+          <span className="font-18">邻舍民宿管理系统</span>
 
           <div className="user-info fr pos-re">
             <img src={userInfo.avatarUrl} alt="头像" />
