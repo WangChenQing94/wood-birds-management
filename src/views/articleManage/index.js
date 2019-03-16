@@ -32,13 +32,13 @@ class ArticleManage extends React.Component {
 				{
 					title: '内容',
 					render: (text, record, index) => (
-						<div class="ellipsis" style={{ 'width': '300px' }} dangerouslySetInnerHTML={{ __html: record.content || '' }}></div>
+						<div className="ellipsis" style={{ 'width': '300px', maxHeight: '300px' }} dangerouslySetInnerHTML={{ __html: record.content || '' }}></div>
 					)
 				},
 				{
 					title: '操作',
 					render: (text, record, index) => (
-						<span className="pointer co-primary">删除</span>
+						<span className="pointer co-primary" onClick={this.handleArticle.bind(this, record)}>删除</span>
 					)
 				}
 			],
@@ -72,11 +72,16 @@ class ArticleManage extends React.Component {
 			initialFrameHeight: 300,
 			autoHeight: true,
 			elementPathEnabled: false,
+			autoSyncData: false,
 			wordCount: false,
 			toolbars: [
 				['fullscreen', 'source', 'undo', 'redo'],
-				['bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', 'simpleupload', 'link']
-			]
+				['bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc', 'insertimage', 'link']
+			],
+			imageActionName: '/discover/uploadImage',
+			imageAllowFiles: [".png", ".jpg", ".jpeg", ".gif", ".bmp"],
+			imagePathFormat: '/images/article',
+			imageUrlPrefix: ''
 		});
 	}
 
@@ -96,6 +101,20 @@ class ArticleManage extends React.Component {
 					item.createTime = formatDate(item.createTime);
 					return item;
 				});
+			}
+		})
+	}
+
+	// 删除文章
+	@action
+	handleArticle = (obj) => {
+		const _this = this;
+		Http.discover.delWonderful({ id: obj.id }).then(res => {
+			console.log(res);
+			if (res.code === 0) {
+				_this.getList();
+			} else {
+				message.error(res.msg);
 			}
 		})
 	}
@@ -163,9 +182,16 @@ class ArticleManage extends React.Component {
 			console.log('上传文件的结果 ---------- ')
 			console.log(res);
 			if (res.data.code === 0) {
-				_this.state.previewList.push(res.data.data);
+				_this.state.previewList.push(res.data.data.url);
+				console.log(_this.state.previewList)
 			}
 		})
+	}
+
+	@action
+	handleDel = (index) => {
+		const _this = this;
+		_this.state.previewList.splice(index, 1);
 	}
 
 	render() {
@@ -203,13 +229,23 @@ class ArticleManage extends React.Component {
 			</div>
 		)
 
+		const previewImg = (
+			previewList.map((item, i) => (
+				<div className="preview-img pos-re" key={i}>
+					<Icon type="delete" className="pos-ab pointer" onClick={_this.handleDel.bind(this, i)} />
+					<img src={item} alt="图片" />
+				</div>
+			))
+		)
+
 		const newArticleForm = (
 			<div className="article-form">
 				<Input className="article-title" placeholder="请输入文章标题" onChange={_this.handleChange}></Input>
 				<div id="ueditor" name="content"></div>
 				<Upload {...uploadOption}>
-					{previewList.length >= 6 ? null : uploadButton}
+					{previewList.length >= 1 ? null : uploadButton}
 				</Upload>
+				{previewImg}
 				<footer>
 					<Button type="primary" onClick={_this.handleBack}>返回</Button>
 					<Button type="primary" onClick={_this.addArticle}>发布</Button>

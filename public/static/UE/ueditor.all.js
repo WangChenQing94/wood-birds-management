@@ -8087,7 +8087,7 @@ UE.Editor.defaultOptions = function(editor){
 
                 configUrl && UE.ajax.request(configUrl,{
                     'method': 'GET',
-                    'dataType': isJsonp ? 'jsonp':'',
+                    'dataType': !isJsonp ? 'jsonp':'',
                     'onsuccess':function(r){
                         try {
                             var config = isJsonp ? r:eval("("+r.responseText+")");

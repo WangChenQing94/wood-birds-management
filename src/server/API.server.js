@@ -41,6 +41,7 @@ class Http {
       getWonderfulList: this.get.bind(this, API.discover.getWonderfulList),
       getArticleDetail: this.get.bind(this, API.discover.getArticleDetail),
       addWonderful: this.post.bind(this, API.discover.addWonderful),
+      delWonderful: this.post.bind(this, API.discover.delWonderful),
       uploadBanner: API.discover.uploadBanner
     }
 

@@ -35,7 +35,8 @@ const discover = {
   getWonderfulList: `${DISCOVER}/wonderful`,  // 获取文章列表
   getArticleDetail: `${DISCOVER}/articleDetail`, // 获取文章详情
   addWonderful: `${DISCOVER}/addWonderful`, // 添加文章
-  uploadBanner: `${DISCOVER}/uploadBanner` // 上传文章封面
+  uploadBanner: `${DISCOVER}/uploadBanner`, // 上传文章封面
+  delWonderful: `${DISCOVER}/delWonderful` // 删除文章
 }
 
 const order = {
