@@ -22,6 +22,7 @@ import { observer } from 'mobx-react';
 import Http from '../../server/API.server';
 import axios from 'axios';
 import { arrayToJson } from '../../utils/tool';
+import AMap from 'AMap';
 import './index.less'
 
 @observer
@@ -71,6 +72,11 @@ class HouseManage extends React.Component {
         label: 'name',
         value: 'code'
       },
+      address: '',
+      location: '',
+      map: null,
+      geoCoder: null,
+      marker: null,
       cityList: [
         {
           value: '00001',
@@ -223,9 +229,16 @@ class HouseManage extends React.Component {
     _this.state.modalTitle = '删除房源';
     if (!_this.state.isNew) {
       _this.getCityList();
+      _this.state.location = '';
+      _this.state.address = '';
     }
     _this.state.previewList = [];
     _this.state.isNew = !_this.state.isNew;
+    if (_this.state.isNew) {
+      _this.state.map = new AMap.Map('map', {
+        resizeEnable: true
+      });
+    }
   }
 
   // 保存房源信息
@@ -243,6 +256,10 @@ class HouseManage extends React.Component {
       if (!err) {
         if (!previewList.length) {
           message.error('请上传房源图片');
+          return
+        }
+        if (!_this.state.location) {
+          message.error('请确定房源定位');
           return
         }
         const postData = JSON.parse(JSON.stringify(data));
@@ -277,6 +294,7 @@ class HouseManage extends React.Component {
         postData.province = '';
         postData.city = postData.address[0] || '';
         postData.region = postData.address[1] || '';
+        postData.location = _this.state.location;
         delete postData.beginAndEndTime;
         // delete postData.configure;
         delete postData.address;
@@ -360,6 +378,36 @@ class HouseManage extends React.Component {
     })
   }
 
+  @action
+  geoCode = () => {
+    const _this = this;
+    const { address } = _this.state;
+    if (!_this.state.geoCoder) {
+      _this.state.geoCoder = new AMap.Geocoder()
+    }
+
+    console.log(address)
+    _this.state.geoCoder.getLocation(address, function (status, result) {
+      console.log(status);
+      console.log(result);
+      if (status === 'complete' && result.geocodes.length) {
+        _this.state.location = result.geocodes[0].location;
+        if (!_this.state.marker) {
+          _this.state.marker = new AMap.Marker();
+          _this.state.map.add(_this.state.marker);
+        }
+        _this.state.marker.setPosition(_this.state.location);
+        _this.state.map.setFitView(_this.state.marker);
+      }
+    });
+  }
+
+  @action
+  handleChange = e => {
+    const _this = this;
+    _this.state.address = e.currentTarget.value;
+  }
+
   render() {
     const _this = this;
     const { previewList, visible, modalTitle, total, pageNo, pageSize } = _this.state;
@@ -384,7 +432,7 @@ class HouseManage extends React.Component {
     };
     const uploadButton = (
       <div>
-        <Icon type="plus"/>
+        <Icon type="plus" />
         <div className="ant-upload-text">上传图片</div>
       </div>
     )
@@ -392,8 +440,8 @@ class HouseManage extends React.Component {
     const uploadPreview = (
       previewList.map((item, i) => (
         <div className="pos-re fl preview" key={i}>
-          <Icon type="delete" className="pos-ab pointer" onClick={_this.handleDeletePicture.bind(this, item, i)}/>
-          <img className="preview-img" src={item} alt="图片"/>
+          <Icon type="delete" className="pos-ab pointer" onClick={_this.handleDeletePicture.bind(this, item, i)} />
+          <img className="preview-img" src={item} alt="图片" />
         </div>
       ))
     )
@@ -406,6 +454,10 @@ class HouseManage extends React.Component {
       customRequest: _this.uploadImage,
       onChange: _this.handleUploadChange
     }
+
+    _this.state.map = new AMap.Map('map', {
+      resizeEnable: true
+    });
 
     // 添加房源
     const addHouseComponent = (
@@ -639,6 +691,21 @@ class HouseManage extends React.Component {
               <TextArea rows={4} placeholder="请输入入住须知"></TextArea>
             )
           }
+        </Item>
+        <Item {...formItemLayout} label="定位" className="map-container">
+          <div id="map" className="pos-re"></div>
+          <div className="input-card pos-ab">
+            <label>地理编码，根据地址获取经纬度坐标</label>
+            <div className="input-item">
+              <div className="input-item-prepend"><span className="input-item-text">地址</span></div>
+              <input type="text" onChange={_this.handleChange}/>
+            </div>
+            <div className="input-item">
+              <div className="input-item-prepend"><span className="input-item-text">经纬度</span></div>
+              <input type="text" disabled value={_this.state.location} />
+            </div>
+            <input onClick={_this.geoCode} type="button" className="btn" value="地址 -> 经纬度" />
+          </div>
         </Item>
         <Item {...formItemLayout} label="上传房源图片" className="clear">
           <Upload {...uploadOption} className="fl">
