@@ -160,7 +160,8 @@ class ArticleManage extends React.Component {
 		console.log(title)
 		Http.discover.addWonderful({
 			title,
-			content: ueditor.getContent()
+			content: ueditor.getContent(),
+			bannerUrl: _this.state.previewList[0]
 		}).then(res => {
 			console.log(res)
 			if (res.code === 0) {
