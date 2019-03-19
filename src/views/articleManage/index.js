@@ -96,6 +96,7 @@ class ArticleManage extends React.Component {
 		}).then(res => {
 			console.log(res)
 			if (res.code === 0) {
+				_this.state.total = res.total;
 				_this.state.tableData = res.data.map((item, i) => {
 					item.key = i;
 					item.createTime = formatDate(item.createTime);
@@ -195,6 +196,13 @@ class ArticleManage extends React.Component {
 		_this.state.previewList.splice(index, 1);
 	}
 
+	@action
+	changePageNo = (val) => {
+		const _this = this;
+		_this.state.pageNo = val;
+		_this.getList();
+	}
+
 	render() {
 		const _this = this;
 		const { isNew, columns, tableData, total, pageNo, pageSize, previewList } = _this.state;
@@ -217,7 +225,8 @@ class ArticleManage extends React.Component {
 						pagination={{
 							total,
 							pageSize,
-							current: pageNo
+							current: pageNo,
+							onChange: _this.changePageNo
 						}}></Table>
 				</div>
 			</div>

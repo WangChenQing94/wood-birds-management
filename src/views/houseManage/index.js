@@ -361,6 +361,7 @@ class HouseManage extends React.Component {
   changePageNo = (val) => {
     const _this = this;
     _this.state.pageNo = val;
+    _this.getHouseList();
   }
 
   // 删除房源图片

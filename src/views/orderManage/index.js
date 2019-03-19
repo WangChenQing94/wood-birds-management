@@ -20,7 +20,7 @@ class OrderManage extends React.Component {
 					key: 'name',
 					render: (text, record) => {
 						return (
-							<span>{record.houses && record.houses.name}</span>
+							<span>{(record.houses && record.houses.name) || '邻舍民宿'}</span>
 						)
 					}
 				},
@@ -29,9 +29,9 @@ class OrderManage extends React.Component {
 					key: 'address',
 					render: (text, record) => {
 						const house = record.houses || {}
-						const address = `${house.province} ${house.city} ${house.region} ${house.addrDetail}`
+						const address = `${house.province || ''} ${house.city || ''} ${house.region || ''} ${house.addrDetail || ''}`
 						return (
-							<span>{address}</span>
+							<span>{address || '未知'}</span>
 						)
 					}
 				},
@@ -50,7 +50,8 @@ class OrderManage extends React.Component {
 			],
 			tableData: [],
 			pageSize: 10,
-			pageNo: 1
+			pageNo: 1,
+			total: 0
 		})
 	}
 
@@ -69,7 +70,7 @@ class OrderManage extends React.Component {
 			status: 2,
 			userId: _this.state.userId,
 			pageSize: 10,
-			pageNo: 1
+			pageNo: _this.state.pageNo
 		}).then(res => {
 			console.log(res)
 			if (res.code === 0) {
@@ -78,14 +79,22 @@ class OrderManage extends React.Component {
 					item.beginTime = formatDate(item.beginTime);
 					item.endTime = formatDate(item.endTime);
 				})
+				_this.state.total = res.total;
 				_this.state.tableData = [].concat(res.data);
 			}
 		})
 	}
+	
+	@action
+	handleChange = (val) => {
+		const _this = this;
+		_this.state.pageNo = val;
+		_this.getOrderList();
+	}
 
 	render() {
 		const _this = this;
-		const { columns, tableData, pageSize, pageNo } = _this.state;
+		const { columns, tableData, pageSize, pageNo, total } = _this.state;
 
 
 		return (
@@ -99,8 +108,10 @@ class OrderManage extends React.Component {
 						columns={columns}
 						dataSource={tableData}
 						pagination={{
+							total,
 							pageSize,
-							current: pageNo
+							current: pageNo,
+							onChange: _this.handleChange
 						}}></Table>
 				</div>
 			</div>
