@@ -1,6 +1,5 @@
+import Login from './login';
 
-
-
-export default {
-
-}
+export default [
+  ...Login
+]

@@ -1,27 +1,32 @@
 import React, { Component } from 'react';
-import logo from '@/main/logo.svg';
-import '@/main/App.scss';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+
+import routes from '../router/index';
+
+interface routeType {
+  path: string,
+  component: any,
+  routes?: routeType,
+  exact?: boolean
+}
 
 class App extends Component {
   render() {
+
+    // 渲染路由
+    const routeRender = routes.map((item: routeType, i: number) => (
+      <Route path={item.path} render={props => (
+        <item.component {...props} routes={item.routes}></item.component>
+      )}></Route>
+    ))
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+      <Router>
+        <div id="app">
+          {routeRender}
+        </div>
+      </Router>
+    )
   }
 }
 
