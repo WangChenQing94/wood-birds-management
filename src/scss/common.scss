@@ -1,0 +1,82 @@
+// 引入antd组件库样式
+// @import '~antd/dist/antd.css';
+// 引入样式变量
+@import './variable.scss';
+
+
+body, div, p, h1, h2, h3, h4, h5, h6,
+ul, li, table, header, article, main,
+section, ol, tr, td, th, aside, footer,
+thead, tbody, tfoot, title, img, b, a, span,
+i, strong, svg, canvas {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  background-color: #f0f0f0;
+
+  a, a:hover, a:active {
+    color: initial;
+    text-decoration: none;
+  }
+  ul {
+    list-style: none;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+  .text-right {
+    text-align: right;
+  }
+
+  .flex {
+    display: flex;
+  }
+  .flex-center {
+    align-items: center;
+  }
+
+  clear:after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    clear: both;
+  }
+  .fl {
+    float: left;
+  }
+  .fr {
+    float: right;
+  }
+
+  .pos-re {
+    position: relative;
+  }
+  .pos-ab {
+    position: absolute;
+  }
+  .pos-fix {
+    position: fixed;
+  }
+
+  .font-14 {
+    font-size: $font14;
+  }
+  .font-16 {
+    font-size: $font16;
+  }
+  .font-18 {
+    font-size: $font18;
+  }
+
+  .col-fff {
+    color: $colorfff;
+  }
+}

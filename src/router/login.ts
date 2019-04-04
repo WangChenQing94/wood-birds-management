@@ -1,6 +1,6 @@
 import { loadable } from './loadable';
 
-import Login from '@/views/login/login'
+import Login from '../views/login/login'
 
 export default [
   {
