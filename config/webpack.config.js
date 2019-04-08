@@ -66,7 +66,7 @@ module.exports = function(webpackEnv) {
   const env = getClientEnvironment(publicUrl);
 
   // common function to get style loaders
-  const getStyleLoaders = (cssOptions, preProcessor) => {
+  const getStyleLoaders = (cssOptions, preProcessor, sassResources) => {
     const loaders = [
       isEnvDevelopment && require.resolve('style-loader'),
       isEnvProduction && {
@@ -108,6 +108,15 @@ module.exports = function(webpackEnv) {
         options: {
           sourceMap: isEnvProduction && shouldUseSourceMap,
         },
+      });
+    }
+    if (sassResources) {
+      loaders.push({
+        loader: require.resolve(sassResources),
+        options: {
+          sourceMap: isEnvProduction && shouldUseSourceMap,
+          resources: path.resolve(__dirname, '../src/scss/variable.scss')
+        }
       });
     }
     return loaders;
@@ -421,10 +430,11 @@ module.exports = function(webpackEnv) {
               exclude: sassModuleRegex,
               use: getStyleLoaders(
                 {
-                  importLoaders: 2,
+                  importLoaders: 3,
                   sourceMap: isEnvProduction && shouldUseSourceMap,
                 },
-                'sass-loader'
+                'sass-loader',
+                'sass-resources-loader'
               ),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.

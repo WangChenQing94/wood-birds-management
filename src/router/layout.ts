@@ -4,7 +4,7 @@ import Analysis from '../views/analysis/analysis';
 
 export default [
   {
-    path: '',
+    path: '/',
     component: Layout,
     routes: [
       {

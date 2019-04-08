@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import { routesProps, routeType } from '../../interface';
 
 import Header from '../../components/header/header';
@@ -7,6 +7,18 @@ import Header from '../../components/header/header';
 class Layout extends Component<routesProps, any> {
   constructor(props: any) {
     super(props)
+  }
+
+  componentDidMount() {
+    const _this = this;
+    _this.redirectLogin();
+  }
+
+  redirectLogin = () => {
+    const _this = this;
+    if (_this.props.location.pathname === '/') {
+      _this.props.history.push('/login')
+    }
   }
 
   render() {

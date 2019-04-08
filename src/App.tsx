@@ -23,7 +23,6 @@ class App extends Component {
         <div id="app">
           <Switch>
             {routeRender}
-            <Redirect from='/' to='/login'></Redirect>
           </Switch>
         </div>
       </Router>
