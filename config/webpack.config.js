@@ -114,7 +114,6 @@ module.exports = function(webpackEnv) {
       loaders.push({
         loader: require.resolve(sassResources),
         options: {
-          sourceMap: isEnvProduction && shouldUseSourceMap,
           resources: path.resolve(__dirname, '../src/scss/variable.scss')
         }
       });
@@ -430,7 +429,7 @@ module.exports = function(webpackEnv) {
               exclude: sassModuleRegex,
               use: getStyleLoaders(
                 {
-                  importLoaders: 3,
+                  importLoaders: 2,
                   sourceMap: isEnvProduction && shouldUseSourceMap,
                 },
                 'sass-loader',
