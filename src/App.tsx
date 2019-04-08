@@ -2,15 +2,13 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
 import routes from './router/index';
-
-interface routeType {
-  path: string,
-  component: any,
-  routes?: routeType,
-  exact?: boolean
-}
+import { routeType } from './interface';
 
 class App extends Component {
+  constructor(props: any) {
+    super(props);
+  }
+
   render() {
     const _this = this;
     // 渲染路由
@@ -23,7 +21,10 @@ class App extends Component {
     return (
       <Router>
         <div id="app">
-          {routeRender}
+          <Switch>
+            {routeRender}
+            <Redirect from='/' to='/login'></Redirect>
+          </Switch>
         </div>
       </Router>
     )

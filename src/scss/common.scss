@@ -1,9 +1,4 @@
-// 引入antd组件库样式
-// @import '~antd/dist/antd.css';
-// 引入样式变量
-@import './variable.scss';
-
-
+// 重置浏览器默认样式
 body, div, p, h1, h2, h3, h4, h5, h6,
 ul, li, table, header, article, main,
 section, ol, tr, td, th, aside, footer,
@@ -74,6 +69,9 @@ body {
   }
   .font-18 {
     font-size: $font18;
+  }
+  .font-24 {
+    font-size: $font24;
   }
 
   .col-fff {

@@ -11,6 +11,20 @@ import './login.scss';
 import { LoginProps } from './interface';
 
 class Login extends Component<LoginProps, any> {
+  constructor(props: LoginProps) {
+    super(props)
+  }
+
+  login = () => {
+    const _this = this;
+    _this.props.form.validateFields((err, value) => {
+      console.log(err)
+      console.log(value)
+      if (!err) {
+        _this.props.history.push('/analysis');
+      }
+    })
+  }
 
   render() {
     const _this = this;
@@ -20,14 +34,14 @@ class Login extends Component<LoginProps, any> {
     return (
       <div className="login">
         <Form className="login-form pos-fix">
-          <p className="text-center">邻舍民宿CMS</p>
+          <p className="text-center login-title font-24">邻舍民宿CMS</p>
           <FormItem>
             {getFieldDecorator('loginName', {
               rules: [
                 { required: true, message: '请输入用户名' }
               ]
             })(
-              <Input placeholder="用户名"></Input>
+              <Input className="form-input" placeholder="用户名" autoComplete="off"></Input>
             )}
           </FormItem>
           <FormItem>
@@ -36,7 +50,7 @@ class Login extends Component<LoginProps, any> {
                 { required: true, message: '请输入密码' }
               ]
             })(
-              <Input placeholder="密码"></Input>
+              <Input className="form-input" placeholder="密码" autoComplete="off"></Input>
             )}
           </FormItem>
           <FormItem>
@@ -47,11 +61,11 @@ class Login extends Component<LoginProps, any> {
               <Checkbox>记住我!</Checkbox>
             )}
           </FormItem>
-          <Button type="primary">登录</Button>
+          <Button type="primary" className="btn-login" onClick={_this.login}>登录</Button>
         </Form>
       </div>
     )
   }
 }
 
-export default Form.create<LoginProps>({})(Login);
+export default Form.create<LoginProps>()(Login);
