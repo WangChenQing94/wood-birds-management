@@ -1,5 +1,5 @@
 // 接口的配置文件;
-// const API = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'http://localhost:3000';
+// const API = process.env.NODE_ENV === 'development' ? 'https://aileer.net' : 'http://localhost:3000';
 const API = process.env.NODE_ENV === 'development' ? 'http://localhost:3010' : 'https://aileer.net';
 
 const ACCOUNT = `${API}/account`;

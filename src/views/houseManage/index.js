@@ -235,9 +235,11 @@ class HouseManage extends React.Component {
     _this.state.previewList = [];
     _this.state.isNew = !_this.state.isNew;
     if (_this.state.isNew) {
-      _this.state.map = new AMap.Map('map', {
-        resizeEnable: true
-      });
+      setTimeout(() => {
+        _this.state.map = new AMap.Map('map', {
+          resizeEnable: true
+        });
+      }, 0)
     }
   }
 
@@ -413,7 +415,7 @@ class HouseManage extends React.Component {
     const _this = this;
     const { previewList, visible, modalTitle, total, pageNo, pageSize } = _this.state;
     const { getFieldDecorator } = _this.props.form;
-    const { Item } = Form;
+    const FormItem = Form.Item;
     const { TextArea } = Input;
     const { Option } = Select;
     const { RangePicker } = DatePicker;
@@ -456,14 +458,10 @@ class HouseManage extends React.Component {
       onChange: _this.handleUploadChange
     }
 
-    _this.state.map = new AMap.Map('map', {
-      resizeEnable: true
-    });
-
     // 添加房源
     const addHouseComponent = (
       <Form>
-        <Item {...formItemLayout} label="房屋名称">
+        <FormItem {...formItemLayout} label="房屋名称">
           {
             getFieldDecorator('name', {
               rules: [{
@@ -473,8 +471,8 @@ class HouseManage extends React.Component {
               <Input placeholder="请输入房屋名称"></Input>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="房屋价格">
+        </FormItem>
+        <FormItem {...formItemLayout} label="房屋价格">
           {
             getFieldDecorator('price', {
               rules: [{
@@ -484,8 +482,8 @@ class HouseManage extends React.Component {
               <Input placeholder="请输入房屋价格"></Input>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="房屋面积">
+        </FormItem>
+        <FormItem {...formItemLayout} label="房屋面积">
           {
             getFieldDecorator('area', {
               rules: [{
@@ -495,8 +493,8 @@ class HouseManage extends React.Component {
               <Input placeholder="请输入房屋面积"></Input>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="租赁方式">
+        </FormItem>
+        <FormItem {...formItemLayout} label="租赁方式">
           {
             getFieldDecorator('lease', {
               rules: [{
@@ -509,8 +507,8 @@ class HouseManage extends React.Component {
               </Select>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="楼房类型">
+        </FormItem>
+        <FormItem {...formItemLayout} label="楼房类型">
           {
             getFieldDecorator('buildType', {
               rules: [{
@@ -524,8 +522,8 @@ class HouseManage extends React.Component {
               </Select>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="房屋类型">
+        </FormItem>
+        <FormItem {...formItemLayout} label="房屋类型">
           {
             getFieldDecorator('houseType', {
               rules: [{
@@ -540,8 +538,8 @@ class HouseManage extends React.Component {
               </Select>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="床型">
+        </FormItem>
+        <FormItem {...formItemLayout} label="床型">
           {
             getFieldDecorator('bedType', {
               rules: [{
@@ -555,8 +553,8 @@ class HouseManage extends React.Component {
               </Select>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="卫生间">
+        </FormItem>
+        <FormItem {...formItemLayout} label="卫生间">
           {
             getFieldDecorator('toilet', {
               rules: [{
@@ -569,8 +567,8 @@ class HouseManage extends React.Component {
               </Select>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="居住人数">
+        </FormItem>
+        <FormItem {...formItemLayout} label="居住人数">
           {
             getFieldDecorator('peoples', {
               rules: [{
@@ -580,8 +578,8 @@ class HouseManage extends React.Component {
               <Input placeholder="请输入居住人数"></Input>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="住房时间">
+        </FormItem>
+        <FormItem {...formItemLayout} label="住房时间">
           {
             getFieldDecorator('beginAndEndTime', {
               rules: [{
@@ -591,8 +589,8 @@ class HouseManage extends React.Component {
               <RangePicker></RangePicker>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="市区">
+        </FormItem>
+        <FormItem {...formItemLayout} label="市区">
           {
             getFieldDecorator('address', {
               rules: [{
@@ -602,8 +600,8 @@ class HouseManage extends React.Component {
               <Cascader options={this.state.cityList} fieldNames={this.state.fieldNames} placeholder="请选择城市和地区"></Cascader>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="详细地址">
+        </FormItem>
+        <FormItem {...formItemLayout} label="详细地址">
           {
             getFieldDecorator('addrDetail', {
               rules: [{
@@ -613,8 +611,8 @@ class HouseManage extends React.Component {
               <Input placeholder="请输入详情地址"></Input>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="房屋描述">
+        </FormItem>
+        <FormItem {...formItemLayout} label="房屋描述">
           {
             getFieldDecorator('describe', {
               rules: [{
@@ -624,8 +622,8 @@ class HouseManage extends React.Component {
               <Input placeholder="请输入房屋描述"></Input>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="房屋配置">
+        </FormItem>
+        <FormItem {...formItemLayout} label="房屋配置">
           {
             getFieldDecorator('configure', {
               rules: [{
@@ -635,26 +633,30 @@ class HouseManage extends React.Component {
               <CheckboxGroup options={this.state.configure}></CheckboxGroup>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="最早最晚时间">
-          {
-            getFieldDecorator('checkInTime', {
-              rules: [{
-                required: true
-              }]
-            })(
-              <TimePicker className="margin-right20" placeholder="最早入住时间" format={'HH:mm'}></TimePicker>
-            )
-          }
-          {
-            getFieldDecorator('checkOutTime', {
-              rules: []
-            })(
-              <TimePicker placeholder="最晚退房时间" format={'HH:mm'}></TimePicker>
-            )
-          }
-        </Item>
-        <Item {...formItemLayout} label="最少入住天数">
+        </FormItem>
+        <FormItem {...formItemLayout} label="最早最晚时间">
+          <FormItem>
+            {
+              getFieldDecorator('checkInTime', {
+                rules: [{
+                  required: true
+                }]
+              })(
+                <TimePicker className="margin-right20" placeholder="最早入住时间" format={'HH:mm'}></TimePicker>
+              )
+            }
+          </FormItem>
+          <FormItem>
+            {
+              getFieldDecorator('checkOutTime', {
+                rules: []
+              })(
+                <TimePicker placeholder="最晚退房时间" format={'HH:mm'}></TimePicker>
+              )
+            }
+          </FormItem>
+        </FormItem>
+        <FormItem {...formItemLayout} label="最少入住天数">
           {
             getFieldDecorator('daysToStay', {
               rules: [{
@@ -664,36 +666,36 @@ class HouseManage extends React.Component {
               <Input placeholder="请输入最少入住天数"></Input>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="身份证">
+        </FormItem>
+        <FormItem {...formItemLayout} label="身份证">
           {
             getFieldDecorator('idCard', {})(
               <Switch checkedChildren="需要" unCheckedChildren="不需要"></Switch>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="线下押金">
+        </FormItem>
+        <FormItem {...formItemLayout} label="线下押金">
           {
             getFieldDecorator('deposit', {})(
               <Switch checkedChildren="需要" unCheckedChildren="不需要"></Switch>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="房屋要求">
+        </FormItem>
+        <FormItem {...formItemLayout} label="房屋要求">
           {
             getFieldDecorator('landlordReq', {})(
               <TextArea rows={4} placeholder="请输入房屋要求"></TextArea>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="入住须知">
+        </FormItem>
+        <FormItem {...formItemLayout} label="入住须知">
           {
             getFieldDecorator('notice', {})(
               <TextArea rows={4} placeholder="请输入入住须知"></TextArea>
             )
           }
-        </Item>
-        <Item {...formItemLayout} label="定位" className="map-container">
+        </FormItem>
+        <FormItem {...formItemLayout} label="定位" className="map-container">
           <div id="map" className="pos-re"></div>
           <div className="input-card pos-ab">
             <label>地理编码，根据地址获取经纬度坐标</label>
@@ -707,13 +709,13 @@ class HouseManage extends React.Component {
             </div>
             <input onClick={_this.geoCode} type="button" className="btn" value="地址 -> 经纬度" />
           </div>
-        </Item>
-        <Item {...formItemLayout} label="上传房源图片" className="clear">
+        </FormItem>
+        <FormItem {...formItemLayout} label="上传房源图片" className="clear">
           <Upload {...uploadOption} className="fl">
             {previewList.length >= 6 ? null : uploadButton}
           </Upload>
           {uploadPreview}
-        </Item>
+        </FormItem>
         <Row className="form-footer">
           <Col offset={5} span={16}>
             <Button type="primary" onClick={_this.handleAddHouse}>保存</Button>
